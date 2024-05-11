@@ -17,7 +17,7 @@ if (!fs.existsSync(settingsPath)) {
         settingsPath,
         JSON.stringify(
             {
-                openai_api_key: "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                openai_api_key: "",
                 model: "gpt-3.5-turbo",
                 system_message: "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
             },

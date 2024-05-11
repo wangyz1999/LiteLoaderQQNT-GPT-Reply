@@ -38,7 +38,7 @@ async function getGPTResponse(text, callback) {
     try {
         const settings = await gpt_reply.getSettings();
         const response = await gpt_reply.getGPTReply({
-            system_message: "System",
+            system_message: settings.system_message,
             prompt: text,
             model: settings.model,
         });
@@ -225,27 +225,23 @@ export const onSettingWindowCreated = async (view) => {
         const openai_api_key = view.querySelector("#openai-api-key");
         const chat_model = view.querySelector("#chat-model");
         const custom_chat_model = view.querySelector("#custom-chat-model");
+        const system_message = view.querySelector("#system-message");
 
         openai_api_key.value = settings.openai_api_key;
 
-        if (settings.model === 'gpt-3.5-turbo') {
-            chat_model.value = 'gpt-3.5';
-        } else if (settings.model === 'gpt-4-turbo') {
-            chat_model.value = 'gpt-4';
-        } else {
-            chat_model.value = 'custom';
+        if (settings.model !== "gpt-3.5-turbo" && settings.model !== "gpt-4-turbo") {
             custom_chat_model.value = settings.model;
         }
 
         const radioButtons = document.querySelectorAll('input[name="chat-model"]');
         radioButtons.forEach(radio => {
-            if (radio.value === chat_model.value) {
+            if (radio.value === chat_model.value || radio.value === "custom" && settings.model !== "gpt-3.5-turbo" && settings.model !== "gpt-4-turbo") {
                 radio.checked = true;
             } else {
                 radio.checked = false;
             }
         });
-
+        system_message.value = settings.system_message;
     } catch (error) {
         log("[设置页面错误]", error);
     }

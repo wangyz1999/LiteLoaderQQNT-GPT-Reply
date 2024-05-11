@@ -96,7 +96,7 @@
         display: inline-block;
     }
 
-    #system-prompt {
+    #system-message {
         height: 100px;
         width: 100%;
     }
@@ -123,10 +123,10 @@
 
                     <div class="radio-group">
                         <label>
-                            <input type="radio" name="chat-model" value="gpt-3.5" checked> GPT-3.5
+                            <input type="radio" name="chat-model" value="gpt-3.5-turbo" checked> GPT-3.5
                         </label>
                         <label>
-                            <input type="radio" name="chat-model" value="gpt-4"> GPT-4
+                            <input type="radio" name="chat-model" value="gpt-4-turbo"> GPT-4
                         </label>
                         <label>
                             <input type="radio" name="chat-model" value="custom"> 自定义
@@ -142,7 +142,7 @@
                     <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">在此处定义模型回复的风格</setting-text>
 
                     <div class="input-group">
-                        <textarea id="system-prompt" spellcheck="false" placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"></textarea>
+                        <textarea id="system-message" spellcheck="false" placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"></textarea>
                     </div>  
                 </div>
             </setting-item>
