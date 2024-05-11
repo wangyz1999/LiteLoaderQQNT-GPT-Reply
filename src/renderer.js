@@ -100,9 +100,7 @@ function handleContextMenu () {
         if (appended) return;
         const qContextMenu = document.querySelector(".q-context-menu");
         if (qContextMenu && messageEl) {
-            log("右键菜单弹出", qContextMenu);
             const messageText = messageEl.querySelector(".message-content").innerText;
-            log(messageText);
             if (!messageText) return;
 
             let firstMenuItem = document.querySelector('.q-context-menu .q-context-menu-item');
