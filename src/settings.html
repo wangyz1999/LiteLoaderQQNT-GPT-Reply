@@ -30,6 +30,10 @@
         width: 100%;
     }
 
+    .gpt_reply setting-item>div.width-80{
+        width: 80% !important;
+    }
+
     /* Light mode */
     @media (prefers-color-scheme: light) {
         .gpt_reply input {
@@ -145,6 +149,20 @@
                         <textarea id="system-message" spellcheck="false" placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"></textarea>
                     </div>  
                 </div>
+            </setting-item>
+        </setting-list>
+    </setting-panel>
+</setting-section>
+
+<setting-section data-title="关于">
+    <setting-panel>
+        <setting-list data-direction="column">
+            <setting-item data-direction="row">
+                <div class="width-80">
+                    <setting-text>GitHub 仓库</setting-text>
+                    <setting-text data-type="secondary">https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply</setting-text>
+                </div>
+                <setting-button data-type="secondary" id="settings-github-link">进去瞅瞅</setting-button>
             </setting-item>
         </setting-list>
     </setting-panel>

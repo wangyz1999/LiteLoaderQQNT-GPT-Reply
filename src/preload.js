@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld("gpt_reply", {
     getSettings: () => ipcRenderer.invoke("LiteLoader.gpt_reply.getSettings"),
     setSettings: (content) => ipcRenderer.invoke("LiteLoader.gpt_reply.setSettings", content),
     logToMain: (...args) => ipcRenderer.invoke("LiteLoader.gpt_reply.logToMain", ...args),
+    openWeb: (url) => ipcRenderer.send("LiteLoader.gpt_reply.openWeb", url),
     getGPTReply: (params) => ipcRenderer.invoke("LiteLoader.gpt_reply.getGPTReply", params),
     streamGPTReply: (params, streamElementId) => {
         ipcRenderer.invoke("LiteLoader.gpt_reply.streamGPTReply", params);

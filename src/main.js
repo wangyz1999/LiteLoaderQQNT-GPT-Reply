@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { BrowserWindow, ipcMain, shell, net, ipcRenderer  } = require("electron");
+const { BrowserWindow, ipcMain, shell } = require("electron");
 const OpenAI = require("openai");
 
 const openai = new OpenAI();
@@ -32,6 +32,10 @@ if (!fs.existsSync(settingsPath)) {
 
 function log(...args) {
     console.log(`[GPT-Reply]`, ...args);
+}
+
+function openWeb(url) {
+    shell.openExternal(url);
 }
 
 function watchSettingsChange(webContents, settingsPath) {
@@ -72,6 +76,10 @@ ipcMain.handle("LiteLoader.gpt_reply.setSettings", (event, content) => {
         log(error);
     }
 });
+
+ipcMain.on("LiteLoader.gpt_reply.openWeb", (event, ...message) =>
+    openWeb(...message)
+);
 
 ipcMain.handle("LiteLoader.gpt_reply.logToMain", (event, ...args) => {
     log(...args);

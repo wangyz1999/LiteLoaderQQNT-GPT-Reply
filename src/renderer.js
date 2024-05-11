@@ -283,6 +283,11 @@ export const onSettingWindowCreated = async (view) => {
             await gpt_reply.setSettings(settings);
         });
 
+        const githubLink = view.querySelector("#settings-github-link");
+        githubLink.addEventListener("click", () => {
+            gpt_reply.openWeb("https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply");
+        });
+
     } catch (error) {
         console.error("[设置页面错误]", error);
     }
