@@ -230,30 +230,60 @@ export const onSettingWindowCreated = async (view) => {
         const html_file_path = `local:///${PLUGIN_PATH}/src/settings.html`;
 
         view.innerHTML = await (await fetch(html_file_path)).text();
-
         const settings = await gpt_reply.getSettings();
 
         const openai_api_key = view.querySelector("#openai-api-key");
-        const chat_model = view.querySelector("#chat-model");
+        const chat_model = view.querySelectorAll('input[name="chat-model"]');
         const custom_chat_model = view.querySelector("#custom-chat-model");
         const system_message = view.querySelector("#system-message");
 
         openai_api_key.value = settings.openai_api_key;
+        system_message.value = settings.system_message;
 
         if (settings.model !== "gpt-3.5-turbo" && settings.model !== "gpt-4-turbo") {
             custom_chat_model.value = settings.model;
         }
 
-        const radioButtons = document.querySelectorAll('input[name="chat-model"]');
-        radioButtons.forEach(radio => {
-            if (radio.value === chat_model.value || radio.value === "custom" && settings.model !== "gpt-3.5-turbo" && settings.model !== "gpt-4-turbo") {
+        chat_model.forEach(radio => {
+            if (radio.value === settings.model || (radio.value === "custom" && settings.model !== "gpt-3.5-turbo" && settings.model !== "gpt-4-turbo")) {
                 radio.checked = true;
             } else {
                 radio.checked = false;
             }
         });
-        system_message.value = settings.system_message;
+
+        chat_model.forEach(radio => {
+            radio.addEventListener('change', async () => {
+                if (radio.checked) {
+                    if (radio.value === "custom") {
+                        settings.model = custom_chat_model.value;
+                    } else {
+                        settings.model = radio.value;
+                    }
+                    await gpt_reply.setSettings(settings);
+                }
+            });
+        });
+
+        custom_chat_model.addEventListener('input', async () => {
+            const customRadio = view.querySelector('input[name="chat-model"][value="custom"]');
+            if (customRadio.checked) {
+                settings.model = custom_chat_model.value;
+                await gpt_reply.setSettings(settings);
+            }
+        });
+
+        openai_api_key.addEventListener('input', async () => {
+            settings.openai_api_key = openai_api_key.value;
+            await gpt_reply.setSettings(settings);
+        });
+
+        system_message.addEventListener('input', async () => {
+            settings.system_message = system_message.value;
+            await gpt_reply.setSettings(settings);
+        });
+
     } catch (error) {
-        log("[设置页面错误]", error);
+        console.error("[设置页面错误]", error);
     }
 };

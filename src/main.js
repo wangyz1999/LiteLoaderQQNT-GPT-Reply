@@ -66,7 +66,7 @@ ipcMain.handle("LiteLoader.gpt_reply.getSettings", (event, message) => {
 
 ipcMain.handle("LiteLoader.gpt_reply.setSettings", (event, content) => {
     try {
-        const new_config = JSON.stringify(content);
+        const new_config = JSON.stringify(content, null, 4);
         fs.writeFileSync(settingsPath, new_config, "utf-8");
     } catch (error) {
         log(error);
