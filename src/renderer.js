@@ -6,23 +6,17 @@ function log(...args) {
 
 function observeElement(selector, callback, continuous = false) {
     let elementExists = false;
-    try {
-        const timer = setInterval(function () {
-            const element = document.querySelector(selector);
-            if (element && !elementExists) {
-                elementExists = true;
-                callback();
-                log("已检测到", selector);
-            } else if (!element) {
-                elementExists = false;
-            }
-            if (element && !continuous) {
-                clearInterval(timer);
-            }
-        }, 100);
-    } catch (error) {
-        log("[检测元素错误]", error);
-    }
+    const timer = setInterval(() => {
+        const element = document.querySelector(selector);
+        if (element && !elementExists) {
+            elementExists = true;
+            callback();
+            log("Detected", selector);
+            if (!continuous) clearInterval(timer);
+        } else if (!element) {
+            elementExists = false;
+        }
+    }, 100);
 }
 
 async function getGPTResponse(text, callback) {
@@ -106,16 +100,13 @@ observeElement("#ml-root .ml-list", function () {
         });
 
     new MutationObserver(() => {
-        if (appended) {
-            return;
-        }
+        if (appended) return;
         const qContextMenu = document.querySelector(".q-context-menu");
         if (qContextMenu && messageEl) {
             log("右键菜单弹出", qContextMenu);
             log(messageEl.querySelector(".message-content").innerText);
-            if (!messageEl.querySelector(".message-content").innerText) {
-                return;
-            }
+            if (!messageEl.querySelector(".message-content").innerText) return;
+
             let firstMenuItem = document.querySelector('.q-context-menu .q-context-menu-item');
             let clonedMenuItem = firstMenuItem.cloneNode(true);
             let textSpan = clonedMenuItem.querySelector('span');
@@ -127,16 +118,21 @@ observeElement("#ml-root .ml-list", function () {
             .then((data) => {
                 qIcon.innerHTML = data;
             });
+
+            clonedMenuItem.addEventListener("click", () => {
+                const text = messageEl.querySelector(".message-content").innerText;
+                showGPTResponse(text);
+            });
+            
             let separator = document.querySelector('.q-context-menu .q-context-menu-separator');
             qContextMenu.insertBefore(clonedMenuItem, separator);
             appended = true;
         }
         
-    }).observe(document.querySelector("body"), { childList: true });
+    }).observe(document.body, { childList: true });
 });
 
-
-observeElement(".chat-input-area .ck-editor", function () {
+function initializeResponseArea() {
     const style = document.createElement("link");
     style.rel = "stylesheet";
     style.href = `local:///${plugin_path}/src/style.css`;
@@ -156,67 +152,23 @@ observeElement(".chat-input-area .ck-editor", function () {
         <div id="response-text"></div>
     `;
 
-    function showgptResponse() {
-        chatTranslating = true;
-        gptResponse.style.display = "block";
-        gptResponse.animate(
-            [
-                { opacity: 0, transform: "translateY(20px)" },
-                { opacity: 1, transform: "translateY(0px)" },
-            ],
-            {
-                duration: 128,
-                easing: "ease-out",
-            }
-        );
-    }
-
-    function hidegptResponse() {
-        gptResponse.animate(
-            [
-                { opacity: 1, transform: "translateY(0px)" },
-                { opacity: 0, transform: "translateY(20px)" },
-            ],
-            {
-                duration: 128,
-                easing: "ease-in",
-            }
-        ).onfinish = function () {
-            gptResponse.style.display = "none";
-            chatTranslating = false;
-        };
-    }
-
-    let ckEditor = document.querySelector(".ck-editor");
+    const ckEditor = document.querySelector(".ck-editor");
     ckEditor.appendChild(gptResponse);
 
-    let ckContent = document.querySelector(".ck-content");
+    const gptResponseText = document.querySelector("#response-text");
 
-    let copyButton = document.querySelector("#gpt-reply-copy-button");
-    let cancelButton = document.querySelector("#gpt-reply-cancel-button");
-    let gptResponseText = document.querySelector("#response-text");
-
-    const clipboardObj = navigator.clipboard;
-    function copygptResponseText() {
-        clipboardObj.writeText(gptResponseText.innerText).then(
-            function () {
-                log("复制成功");
-            },
-            function () {
-                log("复制失败");
-            }
+    document.querySelector("#gpt-reply-copy-button").addEventListener("click", () => {
+        log("Copy button clicked");
+        navigator.clipboard.writeText(gptResponseText.innerText).then(
+            () => log("Copy successful"),
+            () => log("Copy failed")
         );
-    }
-
-    copyButton.addEventListener("click", function () {
-        log("点击了复制按钮");
-        copygptResponseText();
-        hidegptResponse();
+        hideGPTResponse();
     });
 
-    cancelButton.addEventListener("click", function () {
-        log("点击了取消按钮");
-        hidegptResponse();
+    document.querySelector("#gpt-reply-cancel-button").addEventListener("click", () => {
+        log("Cancel button clicked");
+        hideGPTResponse();
     });
 
     observeElement(
@@ -234,43 +186,10 @@ observeElement(".chat-input-area .ck-editor", function () {
                 async () => {
                     log("点击了GPT回复");
 
-                    showgptResponse();
-
-                    console.log(ckContent);
-                    const ckContentIsEmpty = ckContent.innerText.trim() === "";
-
-                    console.log(ckContentIsEmpty);
-                    gptResponseText.innerText = ckContentIsEmpty
-                        ? "请先在聊天框输入内容"
-                        : "GPT思考中...";
-
-                    if (ckContentIsEmpty) {
-                        return;
-                    }
-
-                    const content = document.querySelector(
-                        ".ck-editor__editable"
-                    );
-
-                    const text = content.innerText;
-                    const settings = await gpt_reply.getSettings();
-                    const model = settings.model;
-
-                    getGPTResponse(text, function (json) {
-                        console.log(json);
-                        if (json.code === 200) {
-                            const result = json.data;
-                            if (result) {
-                                gptResponseText.innerText = result;
-                            } else {
-                                gptResponseText.innerText =
-                                    "GPT回复失败， 回复结果为空";
-                            }
-                        } else {
-                            gptResponseText.innerText =
-                                "回复失败：" + json.message;
-                        }
-                    });
+                    const ckContent = document.querySelector(".ck-content");
+                    const text = ckContent.innerText.trim();
+                    gptResponseText.innerText = text ? "GPT thinking..." : "Please enter content in the chat box";
+                    if (text) showGPTResponse(text);
                 }
             );
 
@@ -278,8 +197,40 @@ observeElement(".chat-input-area .ck-editor", function () {
         },
         true
     ); 
-});
+};
 
+function showGPTResponse(text) {
+    chatTranslating = true;
+    const gptResponse = document.getElementById("gpt-response");
+    gptResponse.style.display = "block";
+    gptResponse.animate([{ opacity: 0, transform: "translateY(20px)" }, { opacity: 1, transform: "translateY(0px)" }], {
+        duration: 128,
+        easing: "ease-out",
+    });
+
+    getGPTResponse(text, json => {
+        const gptResponseText = document.getElementById("response-text");
+        if (json.code === 200 && json.data) {
+            gptResponseText.innerText = json.data;
+        } else {
+            gptResponseText.innerText = "GPT response failed: " + (json.message || "No data received");
+        }
+    });
+}
+
+function hideGPTResponse() {
+    const gptResponse = document.getElementById("gpt-response");
+    gptResponse.animate([{ opacity: 1, transform: "translateY(0px)" }, { opacity: 0, transform: "translateY(20px)" }], {
+        duration: 128,
+        easing: "ease-in",
+    }).onfinish = () => {
+        gptResponse.style.display = "none";
+        chatTranslating = false;
+    };
+}
+
+
+observeElement(".chat-input-area .ck-editor", initializeResponseArea);
 
 export const onSettingWindowCreated = async (view) => {
     try {
