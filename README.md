@@ -4,7 +4,7 @@
 
 [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT) 插件，直接在 QQNT 使用ChatGPT回复消息
 
-目前有 **右键回复** 和 **消息框内文本翻译**
+目前有 **右键回复** 和 **消息框内回复**
 
 支持 **自定义系统提示词** 和 **自选模型编号**
 

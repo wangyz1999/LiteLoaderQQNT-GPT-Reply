@@ -4,7 +4,7 @@
 
 The [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT) plugin allows you to use ChatGPT to reply to messages directly in QQNT.
 
-Currently features **right-click reply** and **in-message box text translation**.
+Currently features **right-click reply** and **in-message box reply**.
 
 Supports **custom system prompts** and **model number selection**.
 
