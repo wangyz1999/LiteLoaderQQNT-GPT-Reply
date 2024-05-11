@@ -75,7 +75,7 @@ function barIcon(
 }
 
 
-let chatTranslating = false;
+let gptThinking = false;
 let messageEl;
 let appended = true;
 
@@ -116,14 +116,16 @@ observeElement("#ml-root .ml-list", function () {
             fetch(`local:///${plugin_path}/${iconPath}`)
             .then((response) => response.text())
             .then((data) => {
-                qIcon.innerHTML = data;
+                qIcon.innerHTML = data; 
             });
 
             clonedMenuItem.addEventListener("click", () => {
+                qContextMenu.style.display = "none";
                 const text = messageEl.querySelector(".message-content").innerText;
+                document.getElementById("response-text").innerText = "GPT思考中...";
                 showGPTResponse(text);
             });
-            
+
             let separator = document.querySelector('.q-context-menu .q-context-menu-separator');
             qContextMenu.insertBefore(clonedMenuItem, separator);
             appended = true;
@@ -188,8 +190,8 @@ function initializeResponseArea() {
 
                     const ckContent = document.querySelector(".ck-content");
                     const text = ckContent.innerText.trim();
-                    gptResponseText.innerText = text ? "GPT thinking..." : "Please enter content in the chat box";
-                    if (text) showGPTResponse(text);
+                    gptResponseText.innerText = text ? "GPT思考中..." : "请在聊天框中输入内容";
+                    showGPTResponse(text);
                 }
             );
 
@@ -200,13 +202,18 @@ function initializeResponseArea() {
 };
 
 function showGPTResponse(text) {
-    chatTranslating = true;
+    gptThinking = true;
     const gptResponse = document.getElementById("gpt-response");
     gptResponse.style.display = "block";
     gptResponse.animate([{ opacity: 0, transform: "translateY(20px)" }, { opacity: 1, transform: "translateY(0px)" }], {
         duration: 128,
         easing: "ease-out",
     });
+
+    if (!text) {
+        document.getElementById("response-text").innerText = "请在聊天框中输入内容";
+        return;
+    }
 
     getGPTResponse(text, json => {
         const gptResponseText = document.getElementById("response-text");
@@ -225,7 +232,7 @@ function hideGPTResponse() {
         easing: "ease-in",
     }).onfinish = () => {
         gptResponse.style.display = "none";
-        chatTranslating = false;
+        gptThinking = false;
     };
 }
 
