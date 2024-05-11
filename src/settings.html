@@ -1,0 +1,75 @@
+<style>
+    .gpt_reply a {
+        color: var(--text-link);
+    }
+
+    .gpt_reply input {
+        align-self: normal;
+        flex: 1;
+        border-radius: 4px;
+        margin-right: 12px;
+        padding: 2px 4px;
+        transition: all 100ms ease-out;
+    }
+
+    .gpt_reply input:focus {
+        padding-left: 4px;
+        background-color: var(--overlay_active);
+    }
+
+    .gpt_reply .input-group {
+        display: flex;
+        flex-direction: row;
+        margin-top: 8px;
+    }
+
+    .gpt_reply .ops-btns>*:not(:last-child) {
+        margin-right: 4px;
+    }
+
+    .gpt_reply setting-item>div {
+        width: 100%;
+    }
+
+    /* 浅色模式 */
+    @media (prefers-color-scheme: light) {
+        .gpt_reply input {
+            color: black;
+        }
+    }
+
+    /* 深色模式 */
+    @media (prefers-color-scheme: dark) {
+        .gpt_reply input {
+            color: white;
+        }
+    }
+</style>
+
+<setting-section data-title="配置">
+    <setting-panel>
+        <setting-list data-direction="column">
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>OpenAI API Key</setting-text>
+                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写你自己的 OpenAI API Key</setting-text>
+
+                    <div class="input-group">
+                        <input id="openai-api-key" type="text" spellcheck="false">
+                    </div>
+                </div>
+            </setting-item>
+
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>模型号</setting-text>
+                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写模型号，如gpt-4-turbo</setting-text>
+
+                    <div class="input-group">
+                        <input id="chat-model" type="text" spellcheck="false">
+                    </div>
+                </div>
+            </setting-item>
+        </setting-list>
+    </setting-panel>
+</setting-section>

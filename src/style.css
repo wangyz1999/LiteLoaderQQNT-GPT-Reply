@@ -1,0 +1,83 @@
+.response-title {
+    font-size: 16px;
+    margin-right: 16px;
+}
+
+#gpt-response {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    background-color: var(--bg_bottom_light);
+    padding: 16px;
+    display: none;
+    border-radius: 8px;
+    margin: 8px 16px;
+    box-shadow: 0 4px 12px 0px #00000021;
+    z-index: 9999;
+}
+
+#response-text {
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.response-bar {
+    width: auto;
+    display: flex;
+    text-align: right;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gpt-reply-bar-icon {
+    align-items: center;
+    margin: 0px 8px;
+    position: relative;
+}
+
+.gpt-reply-bar-icon.position-left .gpt-reply-q-tooltips__content {
+    left: 80%;
+}
+
+.gpt-reply-bar-icon .gpt-reply-q-tooltips {
+    align-items: center;
+    display: flex;
+}
+
+.gpt-reply-bar-icon .gpt-reply-q-tooltips:hover .gpt-reply-q-icon {
+    fill: var(--brand_standard);
+}
+
+.gpt-reply-bar-icon .gpt-reply-q-tooltips:hover .gpt-reply-q-tooltips__content {
+    transition-delay: 0.2s;
+    visibility: visible;
+}
+
+.gpt-reply-bar-icon .gpt-reply-q-icon {
+    fill: var(--icon_primary);
+}
+
+.gpt-reply-bar-icon .gpt-reply-q-tooltips__content {
+    position: relative;
+    left: 50%;
+    transform: translateY(30px) translateX(-50%);
+    background-clip: padding-box;
+    background-color: var(--bg_top_light);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    box-shadow: var(--shadow_bg_top);
+    position: absolute;
+    visibility: hidden;
+    white-space-collapse: collapse;
+    text-wrap: nowrap;
+    width: fit-content;
+    font-style: inherit;
+    font-weight: inherit;
+    padding: 4px 7px;
+    font-size: 13px;
+    z-index: 3100;
+}
