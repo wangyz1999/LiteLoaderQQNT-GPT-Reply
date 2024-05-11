@@ -112,7 +112,9 @@
             <setting-item data-direction="row">
                 <div>
                     <setting-text>OpenAI API 密钥</setting-text>
-                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写你自己的 OpenAI API 密钥，或储存成系统变量</setting-text>
+                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写你自己的 OpenAI API 密钥，或储存成系统变量，教程：<a
+                        href="javascript:void(0);"
+                        onclick="gpt_reply.openWeb('https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key')">Set up your API key</a></setting-text>
 
                     <div class="input-group">
                         <input id="openai-api-key" type="text" spellcheck="false" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
@@ -123,7 +125,9 @@
             <setting-item data-direction="row">
                 <div>
                     <setting-text>模型号</setting-text>
-                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写选择模型或填入自定义模型号，如 gpt-4-turbo-preview</setting-text>
+                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写选择模型或填入自定义模型号，如 gpt-4-turbo-preview，模型列表：<a
+                        href="javascript:void(0);"
+                        onclick="gpt_reply.openWeb('https://platform.openai.com/docs/models/models')">Models</a></setting-text>
 
                     <div class="radio-group">
                         <label>

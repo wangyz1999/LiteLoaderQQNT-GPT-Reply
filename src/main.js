@@ -3,10 +3,11 @@ const path = require("path");
 const { BrowserWindow, ipcMain, shell } = require("electron");
 const OpenAI = require("openai");
 
-const openai = new OpenAI();
-
 const pluginDataPath = LiteLoader.plugins["gpt_reply"].path.data;
 const settingsPath = path.join(pluginDataPath, "settings.json");
+
+const apiKey = JSON.parse(fs.readFileSync(settingsPath, "utf-8")).openai_api_key;
+const openai = new OpenAI(apiKey || undefined);
 
 if (!fs.existsSync(pluginDataPath)) {
     fs.mkdirSync(pluginDataPath, { recursive: true });
@@ -25,9 +26,6 @@ if (!fs.existsSync(settingsPath)) {
             4
         )
     );
-} else {
-    const data = fs.readFileSync(settingsPath, "utf-8");
-    const config = JSON.parse(data);
 }
 
 function log(...args) {
