@@ -19,7 +19,7 @@ Note: OpenAI GPT models are not free, usage will incur charges as per the offici
 
 Ensure you have LiteLoaderQQNT installed and functioning properly.
 
-- Go to the Release section of this repository and download the latest plugin zip file.
+- Go to the [Release](https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply/releases) section of this repository and download the latest plugin zip file.
 - Extract the downloaded zip file from this repository's Release section into the LiteLoaderQQNT plugin directory.
 - Start or restart QQNT.
 

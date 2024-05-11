@@ -8,7 +8,7 @@
 
 支持 **自定义系统提示词** 和 **自选模型编号**
 
-注：OpenAI GPT模型并非免费，使用会根据官方价格在官方扣费
+注：OpenAI GPT模型并非免费，使用会根据官方价格在官方API界面扣费
 
 ## 功能展示
 ![设置界面](./res/demo/settings.jpg)
@@ -18,7 +18,7 @@
 
 请确保你已经安装了 LiteLoaderQQNT 并且能正常运作。
 
-- 前往本仓库 Release 下载最新版的插件压缩包
+- 前往本仓库 [Release](https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply/releases) 下载最新版的插件压缩包
 - 将从本仓库 Release 中下载的压缩包解压至 LiteLoaderQQNT 的插件目录中
 - 启动或重启 QQNT
 
