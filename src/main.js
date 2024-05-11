@@ -1,10 +1,9 @@
 const fs = require("fs");
 const path = require("path");
-const { BrowserWindow, ipcMain, shell, net } = require("electron");
-const OpenAI = require('openai');
+const { BrowserWindow, ipcMain, shell, net, ipcRenderer  } = require("electron");
+const OpenAI = require("openai");
 
 const openai = new OpenAI();
-
 
 const pluginDataPath = LiteLoader.plugins["gpt_reply"].path.data;
 const settingsPath = path.join(pluginDataPath, "settings.json");
@@ -19,7 +18,8 @@ if (!fs.existsSync(settingsPath)) {
             {
                 openai_api_key: "",
                 model: "gpt-3.5-turbo",
-                system_message: "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
+                system_message:
+                    "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
             },
             null,
             4
@@ -52,6 +52,7 @@ ipcMain.on(
     }
 );
 
+
 ipcMain.handle("LiteLoader.gpt_reply.getSettings", (event, message) => {
     try {
         const data = fs.readFileSync(settingsPath, "utf-8");
@@ -76,22 +77,48 @@ ipcMain.handle("LiteLoader.gpt_reply.logToMain", (event, ...args) => {
     log(...args);
 });
 
+ipcMain.handle("LiteLoader.gpt_reply.getGPTReply", async (event, params) => {
+    try {
+        const { system_message, prompt, model } = params;
+        const completion = await openai.chat.completions.create({
+            messages: [
+                { role: "system", content: system_message },
+                { role: "user", content: prompt },
+            ],
+            model: model,
+        });
+
+        const response = completion.choices[0].message.content;
+        return response;
+    } catch (error) {
+        log(error);
+        return {};
+    }
+});
+
 ipcMain.handle(
-    "LiteLoader.gpt_reply.getGPTReply",
+    "LiteLoader.gpt_reply.streamGPTReply",
     async (event, params) => {
         try {
             const { system_message, prompt, model } = params;
             const completion = await openai.chat.completions.create({
-                messages: [{ role: "system", content: system_message }, { role: "user", content: prompt }],
+                messages: [
+                    { role: "system", content: system_message },
+                    { role: "user", content: prompt },
+                ],
                 model: model,
-                });
-            
-                const response = completion.choices[0].message.content;
-            return response;
+                stream: true,
+            });
 
+            let chunkIdx = 0;
+            for await (const chunk of completion) {
+                const chunkContent = chunk.choices[0].delta?.content || "";
+                event.sender.send("LiteLoader.gpt_reply.streamData", chunkContent, chunkIdx);
+                chunkIdx++;
+            }
         } catch (error) {
             log(error);
-            return {};
+            event.sender.send("LiteLoader.gpt_reply.streamError", error.message);
         }
     }
 );

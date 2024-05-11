@@ -34,12 +34,12 @@ function observeElement(selector, callback, continuous = false) {
     }, 100);
 }
 
-async function getGPTResponse(text, callback) {
+async function getGPTResponse(prompt, callback) {
     try {
         const settings = await gpt_reply.getSettings();
         const response = await gpt_reply.getGPTReply({
             system_message: settings.system_message,
-            prompt: text,
+            prompt: prompt,
             model: settings.model,
         });
         callback({ code: 200, data: response });
@@ -47,6 +47,16 @@ async function getGPTResponse(text, callback) {
         log("[回复错误]", error);
         callback({ code: -1, message: error.message });
     }
+}
+
+async function streamGPTResponse(prompt, streamElementId) {
+    const settings = await gpt_reply.getSettings();
+    const params = {
+        system_message: settings.system_message,
+        prompt: prompt,
+        model: settings.model,
+    };
+    window.gpt_reply.streamGPTReply(params, streamElementId);
 }
 
 function createBarIcon(iconPath, innerText, clickEvent, mouseEnterEvent, mouseLeaveEvent) {
@@ -190,14 +200,15 @@ function showGPTResponse(text) {
         return;
     }
 
-    getGPTResponse(text, json => {
-        const gptResponseText = document.getElementById("response-text");
-        if (json.code === 200 && json.data) {
-            gptResponseText.innerText = json.data;
-        } else {
-            gptResponseText.innerText = "GPT回复失败: " + (json.message || "未接收到回复");
-        }
-    });
+    // getGPTResponse(text, json => {
+    //     const gptResponseText = document.getElementById("response-text");
+    //     if (json.code === 200 && json.data) {
+    //         gptResponseText.innerText = json.data;
+    //     } else {
+    //         gptResponseText.innerText = "GPT回复失败: " + (json.message || "未接收到回复");
+    //     }
+    // });
+    streamGPTResponse(text, "response-text");
 }
 
 function hideGPTResponse() {

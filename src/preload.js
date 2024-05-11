@@ -1,21 +1,32 @@
-// Electron 主进程 与 渲染进程 交互的桥梁
 const { contextBridge, ipcRenderer } = require("electron");
 
-// 在window对象下导出只读对象
 contextBridge.exposeInMainWorld("gpt_reply", {
-    getSettings: () => ipcRenderer.invoke(
-        "LiteLoader.gpt_reply.getSettings"
-    ),
-    setSettings: content => ipcRenderer.invoke(
-        "LiteLoader.gpt_reply.setSettings",
-        content
-    ),
-    logToMain: (...args) => ipcRenderer.invoke(
-        "LiteLoader.gpt_reply.logToMain",
-        ...args
-    ),
-    getGPTReply: params => ipcRenderer.invoke(
-        "LiteLoader.gpt_reply.getGPTReply",
-        params
-    ),
+    getSettings: () => ipcRenderer.invoke("LiteLoader.gpt_reply.getSettings"),
+    setSettings: (content) => ipcRenderer.invoke("LiteLoader.gpt_reply.setSettings", content),
+    logToMain: (...args) => ipcRenderer.invoke("LiteLoader.gpt_reply.logToMain", ...args),
+    getGPTReply: (params) => ipcRenderer.invoke("LiteLoader.gpt_reply.getGPTReply", params),
+    streamGPTReply: (params, streamElementId) => {
+        ipcRenderer.invoke("LiteLoader.gpt_reply.streamGPTReply", params);
+
+        // Remove previous listeners to avoid duplicate events
+        ipcRenderer.removeAllListeners("LiteLoader.gpt_reply.streamData");
+        ipcRenderer.removeAllListeners("LiteLoader.gpt_reply.streamError");
+        
+        ipcRenderer.on("LiteLoader.gpt_reply.streamData", (event, chunkContent, chunkIdx) => {
+            const streamElement = document.getElementById(streamElementId);
+            if (streamElement) {
+                if (chunkIdx === 0) {
+                    streamElement.innerText = "";
+                }
+                streamElement.innerText += chunkContent;
+            }
+        });
+
+        ipcRenderer.on("LiteLoader.gpt_reply.streamError", (event, errorMessage) => {
+            const streamElement = document.getElementById(streamElementId);
+            if (streamElement) {
+                streamElement.innerText += `\nError: ${errorMessage}`;
+            }
+        });
+    }
 });
