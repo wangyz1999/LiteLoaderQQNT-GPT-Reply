@@ -116,13 +116,19 @@ observeElement("#ml-root .ml-list", function () {
             if (!messageEl.querySelector(".message-content").innerText) {
                 return;
             }
-            const tempEl = document.createElement("div");
-            tempEl.innerHTML = document.querySelector(`.q-context-menu :not([disabled="true"])`).outerHTML.replace(/<!---->/g, "");
-            const item = tempEl.firstChild.firstChild;
-            item.innerText = "GPT";
-            console.log(item);
-
-            qContextMenu.appendChild(item);
+            let firstMenuItem = document.querySelector('.q-context-menu .q-context-menu-item');
+            let clonedMenuItem = firstMenuItem.cloneNode(true);
+            let textSpan = clonedMenuItem.querySelector('span');
+            textSpan.innerText = "GPT";
+            let qIcon = clonedMenuItem.querySelector('.q-icon');
+            const iconPath = "res/openai_tooltip.svg";
+            fetch(`local:///${plugin_path}/${iconPath}`)
+            .then((response) => response.text())
+            .then((data) => {
+                qIcon.innerHTML = data;
+            });
+            let separator = document.querySelector('.q-context-menu .q-context-menu-separator');
+            qContextMenu.insertBefore(clonedMenuItem, separator);
             appended = true;
         }
         
