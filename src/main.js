@@ -17,7 +17,7 @@ if (!fs.existsSync(settingsPath)) {
         settingsPath,
         JSON.stringify(
             {
-                openai_api_key: "enter your openai api key here",
+                openai_api_key: "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
                 model: "gpt-3.5-turbo",
             },
             null,

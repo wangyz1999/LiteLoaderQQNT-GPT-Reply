@@ -75,8 +75,6 @@ function createBarIcon(iconPath, innerText, clickEvent, mouseEnterEvent, mouseLe
     return barIcon;
 }
 
-
-
 function getMessageElement(target) {
     if (target.matches(".msg-content-container")) {
         return target;

@@ -8,7 +8,6 @@
         flex: 1;
         border-radius: 4px;
         margin-right: 12px;
-        padding: 2px 4px;
         transition: all 100ms ease-out;
     }
 
@@ -31,28 +30,82 @@
         width: 100%;
     }
 
-    /* 浅色模式 */
+    /* Light mode */
     @media (prefers-color-scheme: light) {
         .gpt_reply input {
             color: black;
         }
     }
 
-    /* 深色模式 */
+    /* Dark mode */
     @media (prefers-color-scheme: dark) {
         .gpt_reply input {
             color: white;
         }
     }
+
+    .radio-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .radio-group label {
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .radio-group input[type="radio"] {
+        width: 14px;
+        height: 14px;
+        appearance: none;
+        border: 1px solid #c5c5c5;
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        margin: 4px 5px 0 0;
+    }
+
+    .radio-group input[type="radio"]:checked {
+        background-color: #008DEB;
+        border: 1px solid #008DEB;
+    }
+
+    .radio-group input[type="radio"]::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 2px;
+        background-color: white;
+    }
+
+    .radio-group input[type="radio"]:checked::before {
+        background-color: #008DEB;
+    }
+
+    .radio-group input[type="text"] {
+        display: none;
+        margin-left: 10px;
+        padding: 2px 4px;
+    }
+
+    .radio-group input[type="radio"]:checked + input[type="text"] {
+        display: inline-block;
+    }
 </style>
+
+
 
 <setting-section data-title="配置">
     <setting-panel>
         <setting-list data-direction="column">
             <setting-item data-direction="row">
                 <div>
-                    <setting-text>OpenAI API Key</setting-text>
-                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写你自己的 OpenAI API Key</setting-text>
+                    <setting-text>OpenAI API 密钥</setting-text>
+                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写你自己的 OpenAI API 密钥，或储存成系统变量</setting-text>
 
                     <div class="input-group">
                         <input id="openai-api-key" type="text" spellcheck="false">
@@ -65,8 +118,17 @@
                     <setting-text>模型号</setting-text>
                     <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写模型号，如gpt-4-turbo</setting-text>
 
-                    <div class="input-group">
-                        <input id="chat-model" type="text" spellcheck="false">
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="chat-model" value="gpt-3.5" checked> GPT-3.5
+                        </label>
+                        <label>
+                            <input type="radio" name="chat-model" value="gpt-4"> GPT-4
+                        </label>
+                        <label>
+                            <input type="radio" name="chat-model" value="custom"> 自定义
+                            <input id="custom-chat-model" type="text" spellcheck="false" placeholder="输入模型号">
+                        </label>
                     </div>
                 </div>
             </setting-item>
