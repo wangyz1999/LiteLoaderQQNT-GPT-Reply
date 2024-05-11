@@ -95,9 +95,12 @@
     .radio-group input[type="radio"]:checked + input[type="text"] {
         display: inline-block;
     }
+
+    #system-prompt {
+        height: 100px;
+        width: 100%;
+    }
 </style>
-
-
 
 <setting-section data-title="配置">
     <setting-panel>
@@ -108,7 +111,7 @@
                     <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写你自己的 OpenAI API 密钥，或储存成系统变量</setting-text>
 
                     <div class="input-group">
-                        <input id="openai-api-key" type="text" spellcheck="false">
+                        <input id="openai-api-key" type="text" spellcheck="false" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
                     </div>
                 </div>
             </setting-item>
@@ -116,7 +119,7 @@
             <setting-item data-direction="row">
                 <div>
                     <setting-text>模型号</setting-text>
-                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写模型号，如gpt-4-turbo</setting-text>
+                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写选择模型或填入自定义模型号，如 gpt-4-turbo-preview</setting-text>
 
                     <div class="radio-group">
                         <label>
@@ -130,6 +133,17 @@
                             <input id="custom-chat-model" type="text" spellcheck="false" placeholder="输入模型号">
                         </label>
                     </div>
+                </div>
+            </setting-item>
+
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>系统提示词</setting-text>
+                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">在此处定义模型回复的风格</setting-text>
+
+                    <div class="input-group">
+                        <textarea id="system-prompt" spellcheck="false" placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"></textarea>
+                    </div>  
                 </div>
             </setting-item>
         </setting-list>

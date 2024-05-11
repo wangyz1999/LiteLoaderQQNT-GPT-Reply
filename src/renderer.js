@@ -224,8 +224,27 @@ export const onSettingWindowCreated = async (view) => {
 
         const openai_api_key = view.querySelector("#openai-api-key");
         const chat_model = view.querySelector("#chat-model");
+        const custom_chat_model = view.querySelector("#custom-chat-model");
+
         openai_api_key.value = settings.openai_api_key;
-        chat_model.value = settings.model;
+
+        if (settings.model === 'gpt-3.5-turbo') {
+            chat_model.value = 'gpt-3.5';
+        } else if (settings.model === 'gpt-4-turbo') {
+            chat_model.value = 'gpt-4';
+        } else {
+            chat_model.value = 'custom';
+            custom_chat_model.value = settings.model;
+        }
+
+        const radioButtons = document.querySelectorAll('input[name="chat-model"]');
+        radioButtons.forEach(radio => {
+            if (radio.value === chat_model.value) {
+                radio.checked = true;
+            } else {
+                radio.checked = false;
+            }
+        });
 
     } catch (error) {
         log("[设置页面错误]", error);
