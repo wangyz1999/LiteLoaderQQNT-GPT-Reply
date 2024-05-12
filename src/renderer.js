@@ -12,6 +12,11 @@ function log(...args) {
     console.log(`[GPT-Reply]`, ...args);
 }
 
+/**
+ * 获取并设置图标
+ * @param {string} iconPath - 图标路径
+ * @param {HTMLElement} element - 要设置图标的元素
+ */
 function fetchIcon(iconPath, element) {
     fetch(`local:///${PLUGIN_PATH}/${iconPath}`)
         .then((response) => response.text())
@@ -20,6 +25,13 @@ function fetchIcon(iconPath, element) {
         });
 }
 
+
+/**
+ * 观察指定元素并执行回调
+ * @param {string} selector - 选择器
+ * @param {Function} callback - 元素出现时的回调函数
+ * @param {boolean} [continuous=false] - 是否持续观察
+ */
 function observeElement(selector, callback, continuous = false) {
     let elementExists = false;
     const timer = setInterval(() => {
@@ -34,6 +46,12 @@ function observeElement(selector, callback, continuous = false) {
     }, 100);
 }
 
+
+/**
+ * 获取GPT回复
+ * @param {string} prompt - 用户输入的提示
+ * @param {Function} callback - 回复结果的回调函数
+ */
 async function getGPTResponse(prompt, callback) {
     try {
         const settings = await gpt_reply.getSettings();
@@ -49,6 +67,12 @@ async function getGPTResponse(prompt, callback) {
     }
 }
 
+
+/**
+ * 流式获取GPT回复
+ * @param {string} prompt - 用户输入的提示
+ * @param {string} streamElementId - 显示流式数据的HTML元素ID
+ */
 async function streamGPTResponse(prompt, streamElementId) {
     const settings = await gpt_reply.getSettings();
     const params = {
@@ -59,6 +83,16 @@ async function streamGPTResponse(prompt, streamElementId) {
     window.gpt_reply.streamGPTReply(params, streamElementId);
 }
 
+
+/**
+ * 创建工具栏图标
+ * @param {string} iconPath - 图标路径
+ * @param {string} innerText - 图标内的文字
+ * @param {Function} clickEvent - 点击事件
+ * @param {Function} [mouseEnterEvent] - 鼠标进入事件
+ * @param {Function} [mouseLeaveEvent] - 鼠标离开事件
+ * @returns {HTMLElement} 创建的图标元素
+ */
 function createBarIcon(iconPath, innerText, clickEvent, mouseEnterEvent, mouseLeaveEvent) {
     const qTooltips = document.createElement("div");
     const qTooltipsContent = document.createElement("div");
@@ -85,6 +119,12 @@ function createBarIcon(iconPath, innerText, clickEvent, mouseEnterEvent, mouseLe
     return barIcon;
 }
 
+
+/**
+ * 获取消息元素
+ * @param {HTMLElement} target - 目标元素
+ * @returns {HTMLElement} 消息内容容器元素
+ */
 function getMessageElement(target) {
     if (target.matches(".msg-content-container")) {
         return target;
@@ -92,7 +132,7 @@ function getMessageElement(target) {
     return target.closest(".msg-content-container");
 }
 
-// 右键GPT回复
+// 处理右键GPT回复菜单
 function handleContextMenu () {
     document.querySelector("#ml-root .ml-list").addEventListener("mousedown", (e) => {
             if (e.button !== 2) {
@@ -185,7 +225,7 @@ function initializeResponseArea() {
     ); 
 };
 
-// GPT Response Functions
+// 显示GPT回复
 function showGPTResponse(text) {
     gptThinking = true;
     const gptResponse = document.getElementById("gpt-response");
@@ -199,18 +239,10 @@ function showGPTResponse(text) {
         document.getElementById("response-text").innerText = "请在聊天框中输入内容";
         return;
     }
-
-    // getGPTResponse(text, json => {
-    //     const gptResponseText = document.getElementById("response-text");
-    //     if (json.code === 200 && json.data) {
-    //         gptResponseText.innerText = json.data;
-    //     } else {
-    //         gptResponseText.innerText = "GPT回复失败: " + (json.message || "未接收到回复");
-    //     }
-    // });
     streamGPTResponse(text, "response-text");
 }
 
+// 隐藏GPT回复
 function hideGPTResponse() {
     const gptResponse = document.getElementById("gpt-response");
     gptResponse.animate([{ opacity: 1, transform: "translateY(0px)" }, { opacity: 0, transform: "translateY(20px)" }], {
@@ -225,6 +257,11 @@ function hideGPTResponse() {
 observeElement("#ml-root .ml-list", handleContextMenu);
 observeElement(".chat-input-area .ck-editor", initializeResponseArea);
 
+
+/**
+ * 设置窗口创建时的初始化
+ * @param {HTMLElement} view - 设置窗口的HTML元素
+ */
 export const onSettingWindowCreated = async (view) => {
     try {
         const html_file_path = `local:///${PLUGIN_PATH}/src/settings.html`;

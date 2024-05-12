@@ -3,6 +3,7 @@
     margin-right: 16px;
 }
 
+/* GPT响应区域样式 */
 #gpt-response {
     position: absolute;
     top: 0;
@@ -31,6 +32,7 @@
     align-items: center;
 }
 
+/* 聊天框工具栏样式 */
 .gpt-reply-bar-icon {
     align-items: center;
     margin: 0px 8px;
