@@ -16,12 +16,16 @@ function log(...args) {
  * 获取并设置图标
  * @param {string} iconPath - 图标路径
  * @param {HTMLElement} element - 要设置图标的元素
+ * @param {string} [id=null] - 可选，设置到图标的ID
  */
-function fetchIcon(iconPath, element) {
+function fetchIcon(iconPath, element, id = null) {
     fetch(`local:///${PLUGIN_PATH}/${iconPath}`)
         .then((response) => response.text())
         .then((data) => {
             element.innerHTML = data;
+            if (id) {
+                element.querySelector("svg").id = id;
+            }
         });
 }
 
@@ -164,7 +168,7 @@ function handleContextMenu() {
             );
             let clonedMenuItem = firstMenuItem.cloneNode(true);
             clonedMenuItem.querySelector("span").innerText = "GPT";
-            fetchIcon(ICON_PATH, clonedMenuItem.querySelector(".q-icon"));
+            fetchIcon(ICON_PATH, clonedMenuItem.querySelector(".q-icon"), "gpt-context-menu-icon");
 
             clonedMenuItem.addEventListener("click", () => {
                 qContextMenu.style.display = "none";
