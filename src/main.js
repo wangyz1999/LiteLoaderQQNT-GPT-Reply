@@ -6,7 +6,9 @@ const OpenAI = require("openai");
 const pluginDataPath = LiteLoader.plugins["gpt_reply"].path.data;
 const settingsPath = path.join(pluginDataPath, "settings.json");
 
-const apiKey = JSON.parse(fs.readFileSync(settingsPath, "utf-8")).openai_api_key;
+const apiKey = JSON.parse(
+    fs.readFileSync(settingsPath, "utf-8")
+).openai_api_key;
 const openai = new OpenAI(apiKey || undefined);
 
 if (!fs.existsSync(pluginDataPath)) {
@@ -139,32 +141,33 @@ ipcMain.handle("LiteLoader.gpt_reply.getGPTReply", async (event, params) => {
  * 流式获取GPT回复
  * @param {Object} params - 包含system_message, prompt, model的参数对象
  */
-ipcMain.handle(
-    "LiteLoader.gpt_reply.streamGPTReply",
-    async (event, params) => {
-        try {
-            const { system_message, prompt, model } = params;
-            const completion = await openai.chat.completions.create({
-                messages: [
-                    { role: "system", content: system_message },
-                    { role: "user", content: prompt },
-                ],
-                model: model,
-                stream: true,
-            });
+ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
+    try {
+        const { system_message, prompt, model } = params;
+        const completion = await openai.chat.completions.create({
+            messages: [
+                { role: "system", content: system_message },
+                { role: "user", content: prompt },
+            ],
+            model: model,
+            stream: true,
+        });
 
-            let chunkIdx = 0;
-            for await (const chunk of completion) {
-                const chunkContent = chunk.choices[0].delta?.content || "";
-                event.sender.send("LiteLoader.gpt_reply.streamData", chunkContent, chunkIdx);
-                chunkIdx++;
-            }
-        } catch (error) {
-            log(error);
-            event.sender.send("LiteLoader.gpt_reply.streamError", error.message);
+        let chunkIdx = 0;
+        for await (const chunk of completion) {
+            const chunkContent = chunk.choices[0].delta?.content || "";
+            event.sender.send(
+                "LiteLoader.gpt_reply.streamData",
+                chunkContent,
+                chunkIdx
+            );
+            chunkIdx++;
         }
+    } catch (error) {
+        log(error);
+        event.sender.send("LiteLoader.gpt_reply.streamError", error.message);
     }
-);
+});
 
 /**
  * 创建窗口时的触发事件

@@ -25,7 +25,6 @@ function fetchIcon(iconPath, element) {
         });
 }
 
-
 /**
  * 观察指定元素并执行回调
  * @param {string} selector - 选择器
@@ -45,7 +44,6 @@ function observeElement(selector, callback, continuous = false) {
         }
     }, 100);
 }
-
 
 /**
  * 获取GPT回复
@@ -67,7 +65,6 @@ async function getGPTResponse(prompt, callback) {
     }
 }
 
-
 /**
  * 流式获取GPT回复
  * @param {string} prompt - 用户输入的提示
@@ -83,7 +80,6 @@ async function streamGPTResponse(prompt, streamElementId) {
     window.gpt_reply.streamGPTReply(params, streamElementId);
 }
 
-
 /**
  * 创建工具栏图标
  * @param {string} iconPath - 图标路径
@@ -93,7 +89,13 @@ async function streamGPTResponse(prompt, streamElementId) {
  * @param {Function} [mouseLeaveEvent] - 鼠标离开事件
  * @returns {HTMLElement} 创建的图标元素
  */
-function createBarIcon(iconPath, innerText, clickEvent, mouseEnterEvent, mouseLeaveEvent) {
+function createBarIcon(
+    iconPath,
+    innerText,
+    clickEvent,
+    mouseEnterEvent,
+    mouseLeaveEvent
+) {
     const qTooltips = document.createElement("div");
     const qTooltipsContent = document.createElement("div");
     const icon = document.createElement("i");
@@ -104,8 +106,10 @@ function createBarIcon(iconPath, innerText, clickEvent, mouseEnterEvent, mouseLe
 
     qTooltips.classList.add("gpt-reply-q-tooltips");
     qTooltips.addEventListener("click", clickEvent);
-    if (mouseEnterEvent) barIcon.addEventListener("mouseenter", mouseEnterEvent);
-    if (mouseLeaveEvent) barIcon.addEventListener("mouseleave", mouseLeaveEvent);
+    if (mouseEnterEvent)
+        barIcon.addEventListener("mouseenter", mouseEnterEvent);
+    if (mouseLeaveEvent)
+        barIcon.addEventListener("mouseleave", mouseLeaveEvent);
 
     qTooltips.appendChild(icon);
     qTooltips.appendChild(qTooltipsContent);
@@ -118,7 +122,6 @@ function createBarIcon(iconPath, innerText, clickEvent, mouseEnterEvent, mouseLe
 
     return barIcon;
 }
-
 
 /**
  * 获取消息元素
@@ -133,8 +136,10 @@ function getMessageElement(target) {
 }
 
 // 处理右键GPT回复菜单
-function handleContextMenu () {
-    document.querySelector("#ml-root .ml-list").addEventListener("mousedown", (e) => {
+function handleContextMenu() {
+    document
+        .querySelector("#ml-root .ml-list")
+        .addEventListener("mousedown", (e) => {
             if (e.button !== 2) {
                 appended = true;
                 return;
@@ -148,25 +153,30 @@ function handleContextMenu () {
         if (appended) return;
         const qContextMenu = document.querySelector(".q-context-menu");
         if (qContextMenu && messageEl) {
-            const messageText = messageEl.querySelector(".message-content").innerText;
+            const messageText =
+                messageEl.querySelector(".message-content").innerText;
             if (!messageText) return;
 
-            let firstMenuItem = document.querySelector('.q-context-menu .q-context-menu-item');
+            let firstMenuItem = document.querySelector(
+                ".q-context-menu .q-context-menu-item"
+            );
             let clonedMenuItem = firstMenuItem.cloneNode(true);
-            clonedMenuItem.querySelector('span').innerText = "GPT";
-            fetchIcon(ICON_PATH, clonedMenuItem.querySelector('.q-icon'));
+            clonedMenuItem.querySelector("span").innerText = "GPT";
+            fetchIcon(ICON_PATH, clonedMenuItem.querySelector(".q-icon"));
 
             clonedMenuItem.addEventListener("click", () => {
                 qContextMenu.style.display = "none";
-                document.getElementById("response-text").innerText = "GPT思考中...";
+                document.getElementById("response-text").innerText =
+                    "GPT思考中...";
                 showGPTResponse(messageText);
             });
 
-            let separator = document.querySelector('.q-context-menu .q-context-menu-separator');
+            let separator = document.querySelector(
+                ".q-context-menu .q-context-menu-separator"
+            );
             qContextMenu.insertBefore(clonedMenuItem, separator);
             appended = true;
         }
-        
     }).observe(document.body, { childList: true });
 }
 
@@ -195,48 +205,62 @@ function initializeResponseArea() {
     ckEditor.appendChild(gptResponse);
 
     const gptResponseText = document.querySelector("#response-text");
-    document.querySelector("#gpt-reply-copy-button").addEventListener("click", () => {
-        navigator.clipboard.writeText(gptResponseText.innerText);
-        hideGPTResponse();
-    });
+    document
+        .querySelector("#gpt-reply-copy-button")
+        .addEventListener("click", () => {
+            navigator.clipboard.writeText(gptResponseText.innerText);
+            hideGPTResponse();
+        });
 
-    document.querySelector("#gpt-reply-cancel-button").addEventListener("click", () => {
-        hideGPTResponse();
-    });
+    document
+        .querySelector("#gpt-reply-cancel-button")
+        .addEventListener("click", () => {
+            hideGPTResponse();
+        });
 
-    observeElement(".chat-func-bar", () => {
-        const iconBarLeft = document.querySelector(".chat-func-bar").firstElementChild;
+    observeElement(
+        ".chat-func-bar",
+        () => {
+            const iconBarLeft =
+                document.querySelector(".chat-func-bar").firstElementChild;
             if (iconBarLeft.querySelector(".gpt-reply-bar-icon")) return;
 
-            const baricon = createBarIcon(
-                ICON_PATH,
-                "GPT回复",
-                () => {
-                    if (gptThinking) return;
-                    const text = document.querySelector(".ck-content").innerText.trim();
-                    gptResponseText.innerText = text ? "GPT思考中..." : "请在聊天框中输入内容";
-                    showGPTResponse(text);
-                }
-            );
+            const baricon = createBarIcon(ICON_PATH, "GPT回复", () => {
+                if (gptThinking) return;
+                const text = document
+                    .querySelector(".ck-content")
+                    .innerText.trim();
+                gptResponseText.innerText = text
+                    ? "GPT思考中..."
+                    : "请在聊天框中输入内容";
+                showGPTResponse(text);
+            });
 
             iconBarLeft.appendChild(baricon);
         },
         true
-    ); 
-};
+    );
+}
 
 // 显示GPT回复
 function showGPTResponse(text) {
     gptThinking = true;
     const gptResponse = document.getElementById("gpt-response");
     gptResponse.style.display = "block";
-    gptResponse.animate([{ opacity: 0, transform: "translateY(20px)" }, { opacity: 1, transform: "translateY(0px)" }], {
-        duration: 128,
-        easing: "ease-out",
-    });
+    gptResponse.animate(
+        [
+            { opacity: 0, transform: "translateY(20px)" },
+            { opacity: 1, transform: "translateY(0px)" },
+        ],
+        {
+            duration: 128,
+            easing: "ease-out",
+        }
+    );
 
     if (!text) {
-        document.getElementById("response-text").innerText = "请在聊天框中输入内容";
+        document.getElementById("response-text").innerText =
+            "请在聊天框中输入内容";
         return;
     }
     streamGPTResponse(text, "response-text");
@@ -245,10 +269,16 @@ function showGPTResponse(text) {
 // 隐藏GPT回复
 function hideGPTResponse() {
     const gptResponse = document.getElementById("gpt-response");
-    gptResponse.animate([{ opacity: 1, transform: "translateY(0px)" }, { opacity: 0, transform: "translateY(20px)" }], {
-        duration: 128,
-        easing: "ease-in",
-    }).onfinish = () => {
+    gptResponse.animate(
+        [
+            { opacity: 1, transform: "translateY(0px)" },
+            { opacity: 0, transform: "translateY(20px)" },
+        ],
+        {
+            duration: 128,
+            easing: "ease-in",
+        }
+    ).onfinish = () => {
         gptResponse.style.display = "none";
         gptThinking = false;
     };
@@ -256,7 +286,6 @@ function hideGPTResponse() {
 
 observeElement("#ml-root .ml-list", handleContextMenu);
 observeElement(".chat-input-area .ck-editor", initializeResponseArea);
-
 
 /**
  * 设置窗口创建时的初始化
@@ -277,20 +306,28 @@ export const onSettingWindowCreated = async (view) => {
         openai_api_key.value = settings.openai_api_key;
         system_message.value = settings.system_message;
 
-        if (settings.model !== "gpt-3.5-turbo" && settings.model !== "gpt-4-turbo") {
+        if (
+            settings.model !== "gpt-3.5-turbo" &&
+            settings.model !== "gpt-4-turbo"
+        ) {
             custom_chat_model.value = settings.model;
         }
 
-        chat_model.forEach(radio => {
-            if (radio.value === settings.model || (radio.value === "custom" && settings.model !== "gpt-3.5-turbo" && settings.model !== "gpt-4-turbo")) {
+        chat_model.forEach((radio) => {
+            if (
+                radio.value === settings.model ||
+                (radio.value === "custom" &&
+                    settings.model !== "gpt-3.5-turbo" &&
+                    settings.model !== "gpt-4-turbo")
+            ) {
                 radio.checked = true;
             } else {
                 radio.checked = false;
             }
         });
 
-        chat_model.forEach(radio => {
-            radio.addEventListener('change', async () => {
+        chat_model.forEach((radio) => {
+            radio.addEventListener("change", async () => {
                 if (radio.checked) {
                     if (radio.value === "custom") {
                         settings.model = custom_chat_model.value;
@@ -302,29 +339,32 @@ export const onSettingWindowCreated = async (view) => {
             });
         });
 
-        custom_chat_model.addEventListener('input', async () => {
-            const customRadio = view.querySelector('input[name="chat-model"][value="custom"]');
+        custom_chat_model.addEventListener("input", async () => {
+            const customRadio = view.querySelector(
+                'input[name="chat-model"][value="custom"]'
+            );
             if (customRadio.checked) {
                 settings.model = custom_chat_model.value;
                 await gpt_reply.setSettings(settings);
             }
         });
 
-        openai_api_key.addEventListener('input', async () => {
+        openai_api_key.addEventListener("input", async () => {
             settings.openai_api_key = openai_api_key.value;
             await gpt_reply.setSettings(settings);
         });
 
-        system_message.addEventListener('input', async () => {
+        system_message.addEventListener("input", async () => {
             settings.system_message = system_message.value;
             await gpt_reply.setSettings(settings);
         });
 
         const githubLink = view.querySelector("#settings-github-link");
         githubLink.addEventListener("click", () => {
-            gpt_reply.openWeb("https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply");
+            gpt_reply.openWeb(
+                "https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply"
+            );
         });
-
     } catch (error) {
         console.error("[设置页面错误]", error);
     }

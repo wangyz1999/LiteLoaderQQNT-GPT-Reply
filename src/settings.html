@@ -23,15 +23,15 @@
         margin-top: 8px;
     }
 
-    .gpt_reply .ops-btns>*:not(:last-child) {
+    .gpt_reply .ops-btns > *:not(:last-child) {
         margin-right: 4px;
     }
 
-    .gpt_reply setting-item>div {
+    .gpt_reply setting-item > div {
         width: 100%;
     }
 
-    .gpt_reply setting-item>div.width-80{
+    .gpt_reply setting-item > div.width-80 {
         width: 80% !important;
     }
 
@@ -74,8 +74,8 @@
     }
 
     .radio-group input[type="radio"]:checked {
-        background-color: #008DEB;
-        border: 1px solid #008DEB;
+        background-color: #008deb;
+        border: 1px solid #008deb;
     }
 
     .radio-group input[type="radio"]::before {
@@ -88,7 +88,7 @@
     }
 
     .radio-group input[type="radio"]:checked::before {
-        background-color: #008DEB;
+        background-color: #008deb;
     }
 
     .radio-group input[type="text"] {
@@ -113,12 +113,24 @@
             <setting-item data-direction="row">
                 <div>
                     <setting-text>OpenAI API 密钥</setting-text>
-                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写你自己的 OpenAI API 密钥，或储存成系统变量，教程：<a
-                        href="javascript:void(0);"
-                        onclick="gpt_reply.openWeb('https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key')">Set up your API key</a></setting-text>
+                    <setting-text
+                        data-type="secondary"
+                        style="-webkit-line-clamp: initial"
+                        >填写你自己的 OpenAI API
+                        密钥，或储存成系统变量，教程：<a
+                            href="javascript:void(0);"
+                            onclick="gpt_reply.openWeb('https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key')"
+                            >Set up your API key</a
+                        ></setting-text
+                    >
 
                     <div class="input-group">
-                        <input id="openai-api-key" type="text" spellcheck="false" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                        <input
+                            id="openai-api-key"
+                            type="text"
+                            spellcheck="false"
+                            placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                        />
                     </div>
                 </div>
             </setting-item>
@@ -126,20 +138,48 @@
             <setting-item data-direction="row">
                 <div>
                     <setting-text>模型号</setting-text>
-                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">填写选择模型或填入自定义模型号，如 gpt-4-turbo-preview，模型列表：<a
-                        href="javascript:void(0);"
-                        onclick="gpt_reply.openWeb('https://platform.openai.com/docs/models/models')">Models</a></setting-text>
+                    <setting-text
+                        data-type="secondary"
+                        style="-webkit-line-clamp: initial"
+                        >填写选择模型或填入自定义模型号，如
+                        gpt-4-turbo-preview，模型列表：<a
+                            href="javascript:void(0);"
+                            onclick="gpt_reply.openWeb('https://platform.openai.com/docs/models/models')"
+                            >Models</a
+                        ></setting-text
+                    >
 
                     <div class="radio-group">
                         <label>
-                            <input type="radio" name="chat-model" value="gpt-3.5-turbo" checked> GPT-3.5
+                            <input
+                                type="radio"
+                                name="chat-model"
+                                value="gpt-3.5-turbo"
+                                checked
+                            />
+                            GPT-3.5
                         </label>
                         <label>
-                            <input type="radio" name="chat-model" value="gpt-4-turbo"> GPT-4
+                            <input
+                                type="radio"
+                                name="chat-model"
+                                value="gpt-4-turbo"
+                            />
+                            GPT-4
                         </label>
                         <label>
-                            <input type="radio" name="chat-model" value="custom"> 自定义
-                            <input id="custom-chat-model" type="text" spellcheck="false" placeholder="输入模型号">
+                            <input
+                                type="radio"
+                                name="chat-model"
+                                value="custom"
+                            />
+                            自定义
+                            <input
+                                id="custom-chat-model"
+                                type="text"
+                                spellcheck="false"
+                                placeholder="输入模型号"
+                            />
                         </label>
                     </div>
                 </div>
@@ -148,11 +188,19 @@
             <setting-item data-direction="row">
                 <div>
                     <setting-text>系统提示词</setting-text>
-                    <setting-text data-type="secondary" style="-webkit-line-clamp: initial;">在此处定义模型回复的风格</setting-text>
+                    <setting-text
+                        data-type="secondary"
+                        style="-webkit-line-clamp: initial"
+                        >在此处定义模型回复的风格</setting-text
+                    >
 
                     <div class="input-group">
-                        <textarea id="system-message" spellcheck="false" placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"></textarea>
-                    </div>  
+                        <textarea
+                            id="system-message"
+                            spellcheck="false"
+                            placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"
+                        ></textarea>
+                    </div>
                 </div>
             </setting-item>
         </setting-list>
@@ -165,9 +213,13 @@
             <setting-item data-direction="row">
                 <div class="width-80">
                     <setting-text>GitHub 仓库</setting-text>
-                    <setting-text data-type="secondary">https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply</setting-text>
+                    <setting-text data-type="secondary"
+                        >https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply</setting-text
+                    >
                 </div>
-                <setting-button data-type="secondary" id="settings-github-link">进去瞅瞅</setting-button>
+                <setting-button data-type="secondary" id="settings-github-link"
+                    >进去瞅瞅</setting-button
+                >
             </setting-item>
         </setting-list>
     </setting-panel>

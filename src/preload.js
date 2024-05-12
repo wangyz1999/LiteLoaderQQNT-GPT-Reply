@@ -12,13 +12,15 @@ contextBridge.exposeInMainWorld("gpt_reply", {
      * @param {Object} content - 新的配置信息内容
      * @returns {Promise<void>}
      */
-    setSettings: (content) => ipcRenderer.invoke("LiteLoader.gpt_reply.setSettings", content),
+    setSettings: (content) =>
+        ipcRenderer.invoke("LiteLoader.gpt_reply.setSettings", content),
 
     /**
      * 将日志记录到主进程
      * @param {...any} args - 需要记录的日志内容
      */
-    logToMain: (...args) => ipcRenderer.invoke("LiteLoader.gpt_reply.logToMain", ...args),
+    logToMain: (...args) =>
+        ipcRenderer.invoke("LiteLoader.gpt_reply.logToMain", ...args),
 
     /**
      * 打开指定的网页
@@ -31,7 +33,8 @@ contextBridge.exposeInMainWorld("gpt_reply", {
      * @param {Object} params - 包含system_message, prompt, model的参数对象
      * @returns {Promise<string>} GPT回复内容
      */
-    getGPTReply: (params) => ipcRenderer.invoke("LiteLoader.gpt_reply.getGPTReply", params),
+    getGPTReply: (params) =>
+        ipcRenderer.invoke("LiteLoader.gpt_reply.getGPTReply", params),
 
     /**
      * 流式获取GPT回复
@@ -51,26 +54,32 @@ contextBridge.exposeInMainWorld("gpt_reply", {
          * @param {string} chunkContent - 流数据内容
          * @param {number} chunkIdx - 数据块索引
          */
-        ipcRenderer.on("LiteLoader.gpt_reply.streamData", (event, chunkContent, chunkIdx) => {
-            const streamElement = document.getElementById(streamElementId);
-            if (streamElement) {
-                if (chunkIdx === 0) {
-                    streamElement.innerText = "";
+        ipcRenderer.on(
+            "LiteLoader.gpt_reply.streamData",
+            (event, chunkContent, chunkIdx) => {
+                const streamElement = document.getElementById(streamElementId);
+                if (streamElement) {
+                    if (chunkIdx === 0) {
+                        streamElement.innerText = "";
+                    }
+                    streamElement.innerText += chunkContent;
                 }
-                streamElement.innerText += chunkContent;
             }
-        });
+        );
 
         /**
          * 处理流错误
          * @param {Event} event - 事件对象
          * @param {string} errorMessage - 错误信息
          */
-        ipcRenderer.on("LiteLoader.gpt_reply.streamError", (event, errorMessage) => {
-            const streamElement = document.getElementById(streamElementId);
-            if (streamElement) {
-                streamElement.innerText += `\nError: ${errorMessage}`;
+        ipcRenderer.on(
+            "LiteLoader.gpt_reply.streamError",
+            (event, errorMessage) => {
+                const streamElement = document.getElementById(streamElementId);
+                if (streamElement) {
+                    streamElement.innerText += `\nError: ${errorMessage}`;
+                }
             }
-        });
-    }
+        );
+    },
 });
