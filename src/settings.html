@@ -134,7 +134,13 @@
                     </div>
                 </div>
             </setting-item>
+        </setting-list>
+    </setting-panel>
+</setting-section>
 
+<setting-section data-title="模型设置">
+    <setting-panel>
+        <setting-list data-direction="column">
             <setting-item data-direction="row">
                 <div>
                     <setting-text>模型号</setting-text>
@@ -187,6 +193,32 @@
 
             <setting-item data-direction="row">
                 <div>
+                    <setting-text>开启模型记忆</setting-text>
+                    <setting-text
+                        data-type="secondary"
+                        style="-webkit-line-clamp: initial"
+                        >是否开启记忆力</setting-text
+                    >
+                </div>
+                <setting-switch id="keep-memory"></setting-switch>
+            </setting-item>
+            <setting-item
+                data-direction="column"
+                id="keep-memory-settings"
+                style="display: none"
+            >
+                <div>
+                    <setting-text>记忆力</setting-text>
+                    <setting-text
+                        data-type="secondary"
+                        style="-webkit-line-clamp: initial"
+                        >此处设定模型记忆多少论对话，数字越大则每次回复价格更贵</setting-text
+                    >
+                </div>
+            </setting-item>
+
+            <setting-item data-direction="row">
+                <div>
                     <setting-text>系统提示词</setting-text>
                     <setting-text
                         data-type="secondary"
@@ -200,6 +232,52 @@
                             spellcheck="false"
                             placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"
                         ></textarea>
+                    </div>
+                </div>
+            </setting-item>
+
+            <setting-item data-direction="row">
+                <div>
+                    <setting-text>回复模式</setting-text>
+                    <setting-text
+                        data-type="secondary"
+                        style="-webkit-line-clamp: initial"
+                        >在此处定义模型回复的模式</setting-text
+                    >
+                    <div class="radio-group">
+                        <label>
+                            <input
+                                type="radio"
+                                name="reply-mode"
+                                value="reply-mode-copy"
+                                checked
+                            />
+                            复制
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="reply-mode"
+                                value="reply-mode-replace"
+                            />
+                            替换
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="reply-mode"
+                                value="reply-mode-send"
+                            />
+                            发送
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="reply-mode"
+                                value="reply-mode-send-without-preview"
+                            />
+                            不预览直接发送
+                        </label>
                     </div>
                 </div>
             </setting-item>

@@ -316,6 +316,31 @@ export const onSettingWindowCreated = async (view) => {
         const custom_chat_model = view.querySelector("#custom-chat-model");
         const system_message = view.querySelector("#system-message");
 
+        const keep_memory = view.querySelector("#keep-memory");
+
+        // 设置默认值
+        const keep_memory_setting = view.querySelector("#keep-memory-settings");
+        if (settings.enableRemote) {
+            keep_memory.setAttribute("is-active", "");
+            keep_memory_setting.style.display = "block";
+        } else {
+            keep_memory.removeAttribute("is-active");
+            keep_memory_setting.style.display = "none";
+        }
+        keep_memory.addEventListener("click", (event) => {
+            const isActive = event.currentTarget.hasAttribute("is-active");
+            if (isActive) {
+                event.currentTarget.removeAttribute("is-active");
+                settings.enableRemote = false;
+                keep_memory_setting.style.display = "none";
+            } else {
+                event.currentTarget.setAttribute("is-active", "");
+                settings.enableRemote = true;
+                keep_memory_setting.style.display = "block";
+            }
+            gpt_reply.setSettings(settings);
+        });
+
         openai_api_key.value = settings.openai_api_key;
         system_message.value = settings.system_message;
 
