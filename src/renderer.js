@@ -135,7 +135,9 @@ function getMessageElement(target) {
     return target.closest(".msg-content-container");
 }
 
-// 处理右键GPT回复菜单
+/**
+ * 处理右键GPT回复菜单
+ */
 function handleContextMenu() {
     document
         .querySelector("#ml-root .ml-list")
@@ -180,7 +182,9 @@ function handleContextMenu() {
     }).observe(document.body, { childList: true });
 }
 
-// 聊天框GPT回复
+/**
+ * 聊天框GPT回复
+ */
 function initializeResponseArea() {
     const style = document.createElement("link");
     style.rel = "stylesheet";
@@ -242,7 +246,10 @@ function initializeResponseArea() {
     );
 }
 
-// 显示GPT回复
+/**
+ * 显示GPT回复
+ * @param {string} text - 用户输入的文本
+ */
 function showGPTResponse(text) {
     gptThinking = true;
     const gptResponse = document.getElementById("gpt-response");
@@ -266,7 +273,9 @@ function showGPTResponse(text) {
     streamGPTResponse(text, "response-text");
 }
 
-// 隐藏GPT回复
+/**
+ * 隐藏GPT回复
+ */
 function hideGPTResponse() {
     const gptResponse = document.getElementById("gpt-response");
     gptResponse.animate(
