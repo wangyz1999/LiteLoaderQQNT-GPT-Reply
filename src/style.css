@@ -83,3 +83,8 @@
     font-size: 13px;
     z-index: 3100;
 }
+
+/* 右键栏添加的GPT图片在夜间模式反转颜色 */
+body[q-theme="dark"] #gpt-context-menu-icon {
+    filter: invert(1);
+}
