@@ -151,7 +151,6 @@ function handleContextMenu() {
                 return;
             }
             messageEl = getMessageElement(e.target);
-            log("右键点击消息", messageEl);
             appended = false;
         });
 
@@ -254,7 +253,7 @@ function initializeResponseArea() {
  * 显示GPT回复
  * @param {string} text - 用户输入的文本
  */
-function showGPTResponse(text) {
+async function showGPTResponse(text) {
     gptThinking = true;
     const gptResponse = document.getElementById("gpt-response");
     gptResponse.style.display = "block";
@@ -272,6 +271,12 @@ function showGPTResponse(text) {
     if (!text) {
         document.getElementById("response-text").innerText =
             "请在聊天框中输入内容";
+        return;
+    }
+    const openaiIsAvaliable = await gpt_reply.checkOpenAI();
+    if (!openaiIsAvaliable) {
+        document.getElementById("response-text").innerText =
+            "未设置 OpenAI API Key";
         return;
     }
     streamGPTResponse(text, "response-text");

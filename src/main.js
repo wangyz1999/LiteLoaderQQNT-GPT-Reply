@@ -6,10 +6,7 @@ const OpenAI = require("openai");
 const pluginDataPath = LiteLoader.plugins["gpt_reply"].path.data;
 const settingsPath = path.join(pluginDataPath, "settings.json");
 
-const apiKey = JSON.parse(
-    fs.readFileSync(settingsPath, "utf-8")
-).openai_api_key;
-const openai = new OpenAI(apiKey || undefined);
+let openai = null;
 
 if (!fs.existsSync(pluginDataPath)) {
     fs.mkdirSync(pluginDataPath, { recursive: true });
@@ -28,6 +25,21 @@ if (!fs.existsSync(settingsPath)) {
             4
         )
     );
+}
+
+const apiKey = JSON.parse(
+    fs.readFileSync(settingsPath, "utf-8")
+).openai_api_key;
+
+try {
+    if (apiKey) {
+        openai = new OpenAI({apiKey: apiKey});
+    } else {
+        openai = new OpenAI();
+    }
+}
+catch (error) {
+    openai = null;
 }
 
 /**
@@ -69,6 +81,10 @@ ipcMain.on(
     }
 );
 
+ipcMain.handle("LiteLoader.gpt_reply.checkOpenAI", (event, message) => {
+    return openai ? true : false;
+});
+
 /**
  * 获取插件的配置信息
  * @returns {Object} 配置信息对象
@@ -92,6 +108,9 @@ ipcMain.handle("LiteLoader.gpt_reply.setSettings", (event, content) => {
     try {
         const new_config = JSON.stringify(content, null, 4);
         fs.writeFileSync(settingsPath, new_config, "utf-8");
+        if (content.openai_api_key) {
+            openai = new OpenAI({apiKey: content.openai_api_key});
+        }
     } catch (error) {
         log(error);
     }

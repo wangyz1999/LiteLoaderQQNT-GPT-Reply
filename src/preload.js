@@ -29,6 +29,11 @@ contextBridge.exposeInMainWorld("gpt_reply", {
     openWeb: (url) => ipcRenderer.send("LiteLoader.gpt_reply.openWeb", url),
 
     /**
+     * 检查OpenAI是否可用
+     */
+    checkOpenAI: () => ipcRenderer.invoke("LiteLoader.gpt_reply.checkOpenAI"),
+
+    /**
      * 获取GPT回复
      * @param {Object} params - 包含system_message, prompt, model的参数对象
      * @returns {Promise<string>} GPT回复内容
