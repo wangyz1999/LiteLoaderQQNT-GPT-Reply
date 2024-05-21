@@ -435,25 +435,23 @@ export const onSettingWindowCreated = async (view) => {
             await gpt_reply.setSettings(settings);
         });
 
-        
+        // replyModeRadios.forEach(radio => {
+        //     radio.addEventListener('change', async () => {
+        //         if (radio.checked) {
+        //             settings.reply_mode = radio.value;
+        //             await gpt_reply.setSettings(settings);
+        //         }
+        //     });
+        // });
 
-        replyModeRadios.forEach(radio => {
-            radio.addEventListener('change', async () => {
-                if (radio.checked) {
-                    settings.reply_mode = radio.value;
-                    await gpt_reply.setSettings(settings);
-                }
-            });
-        });
-
-        // Initialize the radio buttons based on the saved settings
-        replyModeRadios.forEach(radio => {
-            if (radio.value === settings.reply_mode) {
-                radio.checked = true;
-            } else {
-                radio.checked = false;
-            }
-        });
+        // // Initialize the radio buttons based on the saved settings
+        // replyModeRadios.forEach(radio => {
+        //     if (radio.value === settings.reply_mode) {
+        //         radio.checked = true;
+        //     } else {
+        //         radio.checked = false;
+        //     }
+        // });
 
         const githubLink = view.querySelector("#settings-github-link");
         githubLink.addEventListener("click", () => {
