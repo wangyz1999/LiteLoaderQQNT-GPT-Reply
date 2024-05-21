@@ -188,7 +188,7 @@ function handleContextMenu() {
 /**
  * 聊天框GPT回复
  */
-function initializeResponseArea() {
+async function initializeResponseArea() {
     const style = document.createElement("link");
     style.rel = "stylesheet";
     style.href = `local:///${PLUGIN_PATH}/src/style.css`;
@@ -201,7 +201,7 @@ function initializeResponseArea() {
         <div class="response-bar">
             <div class="response-title">GPT回复</div>
             <div class="response-buttons">
-                <button id="gpt-reply-copy-button" class="q-button q-button--small q-button--primary">复制</button>
+                <button id="gpt-reply-action-button" class="q-button q-button--small q-button--primary">复制</button>
                 <button id="gpt-reply-cancel-button" class="q-button q-button--small q-button--secondary">取消</button>
             </div>
         </div>
@@ -212,12 +212,35 @@ function initializeResponseArea() {
     ckEditor.appendChild(gptResponse);
 
     const gptResponseText = document.querySelector("#response-text");
-    document
-        .querySelector("#gpt-reply-copy-button")
-        .addEventListener("click", () => {
-            navigator.clipboard.writeText(gptResponseText.innerText);
-            hideGPTResponse();
-        });
+    const actionButton = document.querySelector("#gpt-reply-action-button");
+    // actionButton.addEventListener("click", () => {
+    //     if (actionButton.innerText === "复制") {
+    //         console.log("复制")
+    //         navigator.clipboard.writeText(gptResponseText.innerText);
+    //     } else if (actionButton.innerText === "替换") {
+    //         console.log("替换")
+    //         const editor = document.querySelector(".ck-content");
+    //         console.log(editor.innerText);
+    //         console.log(gptResponseText.innerText);
+    //         editor.innerHTML = gptResponseText.innerText.split('\n').map(line => `<p>${line}</p>`).join('');
+    //         console.log(editor.innerHTML);
+    //     } else if (actionButton.innerText === "发送") {
+    //         console.log("发送");
+    //         const editor = document.querySelector(".ck-content");
+    //         editor.innerHTML = gptResponseText.innerText.split('\n').map(line => `<p>${line}</p>`).join('');
+    
+    //         document.querySelector(".send-msg").click();
+    //     }
+    
+    //     hideGPTResponse();
+    // });
+
+    actionButton.addEventListener("click", () => {
+        navigator.clipboard.writeText(gptResponseText.innerText);
+    
+        hideGPTResponse();
+    });
+    
 
     document
         .querySelector("#gpt-reply-cancel-button")
@@ -254,6 +277,17 @@ function initializeResponseArea() {
  * @param {string} text - 用户输入的文本
  */
 async function showGPTResponse(text) {
+    const settings = await gpt_reply.getSettings();
+    const actionButton = document.querySelector("#gpt-reply-action-button");
+    // if (settings.reply_mode === "reply-mode-copy") { 
+    //     actionButton.innerText = "复制";
+    // } else if (settings.reply_mode === "reply-mode-send") {
+    //     actionButton.innerText = "发送";
+    // } else if (settings.reply_mode === "reply-mode-replace") {
+    //     actionButton.innerText = "替换";
+    // }
+    actionButton.innerText = "复制";
+
     gptThinking = true;
     const gptResponse = document.getElementById("gpt-response");
     gptResponse.style.display = "block";
@@ -320,31 +354,30 @@ export const onSettingWindowCreated = async (view) => {
         const chat_model = view.querySelectorAll('input[name="chat-model"]');
         const custom_chat_model = view.querySelector("#custom-chat-model");
         const system_message = view.querySelector("#system-message");
+        const replyModeRadios = view.querySelectorAll('input[name="reply-mode"]');
 
-        const keep_memory = view.querySelector("#keep-memory");
-
-        // 设置默认值
-        const keep_memory_setting = view.querySelector("#keep-memory-settings");
-        if (settings.enableRemote) {
-            keep_memory.setAttribute("is-active", "");
-            keep_memory_setting.style.display = "block";
-        } else {
-            keep_memory.removeAttribute("is-active");
-            keep_memory_setting.style.display = "none";
-        }
-        keep_memory.addEventListener("click", (event) => {
-            const isActive = event.currentTarget.hasAttribute("is-active");
-            if (isActive) {
-                event.currentTarget.removeAttribute("is-active");
-                settings.enableRemote = false;
-                keep_memory_setting.style.display = "none";
-            } else {
-                event.currentTarget.setAttribute("is-active", "");
-                settings.enableRemote = true;
-                keep_memory_setting.style.display = "block";
-            }
-            gpt_reply.setSettings(settings);
-        });
+        // const keep_memory = view.querySelector("#keep-memory");
+        // const keep_memory_setting = view.querySelector("#keep-memory-settings");
+        // if (settings.keep_memory) {
+        //     keep_memory.setAttribute("is-active", "");
+        //     keep_memory_setting.style.display = "block";
+        // } else {
+        //     keep_memory.removeAttribute("is-active");
+        //     keep_memory_setting.style.display = "none";
+        // }
+        // keep_memory.addEventListener("click", (event) => {
+        //     const isActive = event.currentTarget.hasAttribute("is-active");
+        //     if (isActive) {
+        //         event.currentTarget.removeAttribute("is-active");
+        //         settings.keep_memory = false;
+        //         keep_memory_setting.style.display = "none";
+        //     } else {
+        //         event.currentTarget.setAttribute("is-active", "");
+        //         settings.enableRkeep_memoryemote = true;
+        //         keep_memory_setting.style.display = "block";
+        //     }
+        //     gpt_reply.setSettings(settings);
+        // });
 
         openai_api_key.value = settings.openai_api_key;
         system_message.value = settings.system_message;
@@ -400,6 +433,26 @@ export const onSettingWindowCreated = async (view) => {
         system_message.addEventListener("input", async () => {
             settings.system_message = system_message.value;
             await gpt_reply.setSettings(settings);
+        });
+
+        
+
+        replyModeRadios.forEach(radio => {
+            radio.addEventListener('change', async () => {
+                if (radio.checked) {
+                    settings.reply_mode = radio.value;
+                    await gpt_reply.setSettings(settings);
+                }
+            });
+        });
+
+        // Initialize the radio buttons based on the saved settings
+        replyModeRadios.forEach(radio => {
+            if (radio.value === settings.reply_mode) {
+                radio.checked = true;
+            } else {
+                radio.checked = false;
+            }
         });
 
         const githubLink = view.querySelector("#settings-github-link");

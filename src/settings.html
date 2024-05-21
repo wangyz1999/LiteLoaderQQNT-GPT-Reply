@@ -40,11 +40,17 @@
         .gpt_reply input {
             color: black;
         }
+        textarea {
+            color: black;
+        }
     }
 
     /* Dark mode */
     @media (prefers-color-scheme: dark) {
         .gpt_reply input {
+            color: white;
+        }
+        textarea {
             color: white;
         }
     }
@@ -191,7 +197,7 @@
                 </div>
             </setting-item>
 
-            <setting-item data-direction="row">
+            <!-- <setting-item data-direction="row">
                 <div>
                     <setting-text>开启模型记忆</setting-text>
                     <setting-text
@@ -215,7 +221,7 @@
                         >此处设定模型记忆多少论对话，数字越大则每次回复价格更贵</setting-text
                     >
                 </div>
-            </setting-item>
+            </setting-item> -->
 
             <setting-item data-direction="row">
                 <div>
@@ -236,7 +242,7 @@
                 </div>
             </setting-item>
 
-            <setting-item data-direction="row">
+            <!-- <setting-item data-direction="row">
                 <div>
                     <setting-text>回复模式</setting-text>
                     <setting-text
@@ -280,7 +286,7 @@
                         </label>
                     </div>
                 </div>
-            </setting-item>
+            </setting-item> -->
         </setting-list>
     </setting-panel>
 </setting-section>
