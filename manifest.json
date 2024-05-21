@@ -4,7 +4,7 @@
     "name": "GPT-Reply",
     "slug": "gpt_reply",
     "description": "在 QQNT 直接使用ChatGPT进行回复",
-    "version": "1.0.0",
+    "version": "v1.0.2",
     "thumb": "./res/openai.svg",
     "icon": "./res/chatgpt-icon.webp",
     "authors": [{
@@ -21,7 +21,7 @@
         "repo": "wangyz1999/LiteLoaderQQNT-GPT-Reply",
         "branch": "main",
         "release": {
-            "tag": "v1.0.0",
+            "tag": "v1.0.2",
             "file": "LiteLoaderQQNT-GPT-Reply.zip"
         }
     }
