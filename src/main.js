@@ -17,6 +17,7 @@ if (!fs.existsSync(settingsPath)) {
         JSON.stringify(
             {
                 openai_api_key: "",
+                openai_base_url: "",
                 model: "gpt-3.5-turbo",
                 reply_mode: "reply-mode-copy",
                 system_message:
@@ -31,10 +32,16 @@ if (!fs.existsSync(settingsPath)) {
 const apiKey = JSON.parse(
     fs.readFileSync(settingsPath, "utf-8")
 ).openai_api_key;
+const baseURL = JSON.parse(
+    fs.readFileSync(settingsPath, "utf-8")
+).openai_base_url;
 
 try {
-    if (apiKey) {
-        openai = new OpenAI({apiKey: apiKey});
+    if (apiKey || baseURL) {
+        openai = new OpenAI({
+            apiKey: apiKey,
+            baseURL: baseURL,
+        });
     } else {
         openai = new OpenAI();
     }
@@ -109,8 +116,11 @@ ipcMain.handle("LiteLoader.gpt_reply.setSettings", (event, content) => {
     try {
         const new_config = JSON.stringify(content, null, 4);
         fs.writeFileSync(settingsPath, new_config, "utf-8");
-        if (content.openai_api_key) {
-            openai = new OpenAI({apiKey: content.openai_api_key});
+        if (content.openai_api_key || content.openai_base_url) {
+            openai = new OpenAI({
+                apiKey: content.openai_api_key,
+                baseURL: content.openai_base_url,
+            });
         }
     } catch (error) {
         log(error);

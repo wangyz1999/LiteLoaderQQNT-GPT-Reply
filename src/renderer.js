@@ -351,6 +351,7 @@ export const onSettingWindowCreated = async (view) => {
         const settings = await gpt_reply.getSettings();
 
         const openai_api_key = view.querySelector("#openai-api-key");
+        const openai_base_url = view.querySelector("#openai-base-url");
         const chat_model = view.querySelectorAll('input[name="chat-model"]');
         const custom_chat_model = view.querySelector("#custom-chat-model");
         const system_message = view.querySelector("#system-message");
@@ -380,6 +381,7 @@ export const onSettingWindowCreated = async (view) => {
         // });
 
         openai_api_key.value = settings.openai_api_key;
+        openai_base_url.value = settings.openai_base_url;
         system_message.value = settings.system_message;
 
         if (
@@ -427,6 +429,11 @@ export const onSettingWindowCreated = async (view) => {
 
         openai_api_key.addEventListener("input", async () => {
             settings.openai_api_key = openai_api_key.value;
+            await gpt_reply.setSettings(settings);
+        });
+
+        openai_base_url.addEventListener("input", async () => {
+            settings.openai_base_url = openai_base_url.value;
             await gpt_reply.setSettings(settings);
         });
 
