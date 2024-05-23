@@ -4,17 +4,18 @@
 
 [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT) 插件，直接在 QQNT 使用 ChatGPT 回复消息
 
-目前有 **右键回复** 和 **消息框内回复**
+支持 **右键回复** 和 **消息框内回复**
 
-支持 **自定义系统提示词** 和 **自选模型编号**
+支持 **自定义API接口**，**自定义系统提示词** 和 **自选模型编号**
 
 注：OpenAI GPT 模型并非免费，使用会根据官方价格在官方 API 界面扣费
 
 ## 功能展示
 
-![设置界面](./res/demo/settings.jpg)
-![消息框模式](./res/demo/chat_mode.gif)
-![右键模式](./res/demo/right_click_mode.gif)
+<img src="./res/demo/settings.jpg" alt="设置界面" width="600"/>
+<img src="./res/demo/chat_mode.gif" alt="消息框模式" width="600"/>
+<img src="./res/demo/right_click_mode.gif" alt="右键模式" width="600"/>
+
 
 ## 安装
 

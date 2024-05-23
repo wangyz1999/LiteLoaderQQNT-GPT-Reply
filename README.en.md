@@ -6,15 +6,15 @@ The [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT) plugin al
 
 Currently features **right-click reply** and **in-message box reply**.
 
-Supports **custom system prompts** and **model number selection**.
+Supports **custom api base url**, **custom system prompts** and **model number selection**.
 
 Note: OpenAI GPT models are not free, usage will incur charges as per the official pricing.
 
 ## Feature Showcase
 
-![Settings Interface](./res/demo/settings.jpg)
-![Message Box Mode](./res/demo/chat_mode.gif)
-![Right-click Mode](./res/demo/right_click_mode.gif)
+<img src="./res/demo/settings.jpg" alt="Settings Interface" width="600"/>
+<img src="./res/demo/chat_mode.gif" alt="Message Box Mode" width="600"/>
+<img src="./res/demo/right_click_mode.gif" alt="Right-click Mode" width="600"/>
 
 ## Installation
 
