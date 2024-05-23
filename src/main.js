@@ -3,30 +3,32 @@ const path = require("path");
 const { BrowserWindow, ipcMain, shell } = require("electron");
 const OpenAI = require("openai");
 
+let openai = null;
+
 const pluginDataPath = LiteLoader.plugins["gpt_reply"].path.data;
 const settingsPath = path.join(pluginDataPath, "settings.json");
 
-let openai = null;
+const defaultSettings = {
+    openai_api_key: "",
+    openai_base_url: "",
+    model: "gpt-3.5-turbo",
+    reply_mode: "reply-mode-copy",
+    system_message:
+        "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
+};
 
 if (!fs.existsSync(pluginDataPath)) {
     fs.mkdirSync(pluginDataPath, { recursive: true });
 }
+
+
 if (!fs.existsSync(settingsPath)) {
-    fs.writeFileSync(
-        settingsPath,
-        JSON.stringify(
-            {
-                openai_api_key: "",
-                openai_base_url: "",
-                model: "gpt-3.5-turbo",
-                reply_mode: "reply-mode-copy",
-                system_message:
-                    "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
-            },
-            null,
-            4
-        )
-    );
+    fs.writeFileSync(settingsPath, JSON.stringify(defaultSettings, null, 4));
+} else {
+    const currentSettings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+    if (updateSettingsWithDefaults(currentSettings, defaultSettings)) {
+        fs.writeFileSync(settingsPath, JSON.stringify(currentSettings, null, 4));
+    }
 }
 
 const apiKey = JSON.parse(
@@ -48,6 +50,23 @@ try {
 }
 catch (error) {
     openai = null;
+}
+
+/**
+ * 使用默认值更新现有设置对象中的缺失键。
+ * @param {Object} existingSettings - 需要检查和更新的当前设置对象。
+ * @param {Object} defaultSettings - 包含所需键及其默认值的默认设置对象。
+ * @returns {boolean} - 如果向现有设置中添加了任何键，则返回 true，否则返回 false。
+ */
+function updateSettingsWithDefaults(existingSettings, defaultSettings) {
+    let updated = false;
+    for (const key in defaultSettings) {
+        if (!existingSettings.hasOwnProperty(key)) {
+            existingSettings[key] = defaultSettings[key];
+            updated = true;
+        }
+    }
+    return updated;
 }
 
 /**
