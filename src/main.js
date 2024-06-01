@@ -31,24 +31,16 @@ if (!fs.existsSync(settingsPath)) {
     }
 }
 
-const apiKey = JSON.parse(
-    fs.readFileSync(settingsPath, "utf-8")
-).openai_api_key;
-const baseURL = JSON.parse(
-    fs.readFileSync(settingsPath, "utf-8")
-).openai_base_url;
+const currentSettings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+const apiKey = currentSettings.openai_api_key || process.env.OPENAI_API_KEY;
+const baseURL = currentSettings.openai_base_url || process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1';
 
 try {
-    if (apiKey || baseURL) {
-        openai = new OpenAI({
-            apiKey: apiKey,
-            baseURL: baseURL,
-        });
-    } else {
-        openai = new OpenAI();
-    }
-}
-catch (error) {
+    openai = new OpenAI({
+        apiKey: apiKey,
+        baseURL: baseURL,
+    });
+} catch (error) {
     openai = null;
 }
 
@@ -135,12 +127,12 @@ ipcMain.handle("LiteLoader.gpt_reply.setSettings", (event, content) => {
     try {
         const new_config = JSON.stringify(content, null, 4);
         fs.writeFileSync(settingsPath, new_config, "utf-8");
-        if (content.openai_api_key || content.openai_base_url) {
-            openai = new OpenAI({
-                apiKey: content.openai_api_key,
-                baseURL: content.openai_base_url,
-            });
-        }
+        const apiKey = content.openai_api_key || process.env.OPENAI_API_KEY;
+        const baseURL = content.openai_base_url || process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1';
+        openai = new OpenAI({
+            apiKey: apiKey,
+            baseURL: baseURL,
+        });
     } catch (error) {
         log(error);
     }
