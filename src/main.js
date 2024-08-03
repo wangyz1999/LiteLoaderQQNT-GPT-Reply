@@ -196,7 +196,7 @@ ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
 
         let chunkIdx = 0;
         for await (const chunk of completion) {
-            const chunkContent = chunk.choices[0].delta?.content || "";
+            const chunkContent = chunk.choices[0].delta ? chunk.choices[0].delta.content || "" : "";
             event.sender.send(
                 "LiteLoader.gpt_reply.streamData",
                 chunkContent,
