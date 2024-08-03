@@ -385,7 +385,7 @@ export const onSettingWindowCreated = async (view) => {
         system_message.value = settings.system_message;
 
         if (
-            settings.model !== "gpt-3.5-turbo" &&
+            settings.model !== "gpt-4o-mini" &&
             settings.model !== "gpt-4o"
         ) {
             custom_chat_model.value = settings.model;
@@ -395,7 +395,7 @@ export const onSettingWindowCreated = async (view) => {
             if (
                 radio.value === settings.model ||
                 (radio.value === "custom" &&
-                    settings.model !== "gpt-3.5-turbo" &&
+                    settings.model !== "gpt-4o-mini" &&
                     settings.model !== "gpt-4o")
             ) {
                 radio.checked = true;

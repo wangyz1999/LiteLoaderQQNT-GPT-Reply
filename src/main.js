@@ -11,7 +11,7 @@ const settingsPath = path.join(pluginDataPath, "settings.json");
 const defaultSettings = {
     openai_api_key: "",
     openai_base_url: "",
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
     reply_mode: "reply-mode-copy",
     system_message:
         "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
