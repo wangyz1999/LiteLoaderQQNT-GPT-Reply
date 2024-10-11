@@ -196,19 +196,22 @@ ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
 
         let chunkIdx = 0;
         for await (const chunk of completion) {
-            const chunkContent = chunk.choices[0].delta ? chunk.choices[0].delta.content || "" : "";
-            event.sender.send(
-                "LiteLoader.gpt_reply.streamData",
-                chunkContent,
-                chunkIdx
-            );
-            chunkIdx++;
+            const chunkContent = chunk?.choices?.[0]?.delta?.content ?? '';
+            if (chunkContent) {
+                event.sender.send(
+                    "LiteLoader.gpt_reply.streamData",
+                    chunkContent,
+                    chunkIdx
+                );
+                chunkIdx++;
+            }
         }
     } catch (error) {
         log(error);
         event.sender.send("LiteLoader.gpt_reply.streamError", error.message);
     }
 });
+
 
 /**
  * 创建窗口时的触发事件
