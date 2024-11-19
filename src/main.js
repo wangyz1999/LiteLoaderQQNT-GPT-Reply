@@ -224,15 +224,13 @@ ipcMain.handle("LiteLoader.gpt_reply.getGPTReply", async (event, params) => {
 ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
     try {
         const { system_message, prompt, model } = params;
-        let finalprompt;
         let stream;
         let streamIdx = 0;
         switch (model) {
             case "4ominiddg":
                 duckai = await initChat("gpt-4o-mini")
-                finalprompt = "prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
-                    + "\n" + "接下来是你要回答的问题，请使用中文回复。你回复的所有内容都要有关于问题，而不要将prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt;
-                stream = await duckai.fetchStream(finalprompt);
+                stream = await duckai.fetchStream("prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
+                    + "\n" + "接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt);
                 streamIdx = 0;
                 for await (const data of stream) {
                     const dataContent = data ?? "";
@@ -248,9 +246,8 @@ ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
                 break;
             case "llamaddg":
                 duckai = await initChat("llama")
-                finalprompt = "prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
-                    + "\n" + "接下来是你要回答的问题，请使用中文回复。你回复的所有内容都要有关于问题，而不要将prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt;
-                stream = await duckai.fetchStream(finalprompt);
+                stream = await duckai.fetchStream("prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
+                    + "\n" + "接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt);
                 streamIdx = 0;
                 for await (const data of stream) {
                     const dataContent = data ?? "";
@@ -266,9 +263,8 @@ ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
                 break;
             case "mixtralddg":
                 duckai = await initChat("mixtral")
-                finalprompt = "prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
-                    + "\n" + "接下来是你要回答的问题，请使用中文回复。你回复的所有内容都要有关于问题，而不要将prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt;
-                stream = await duckai.fetchStream(finalprompt);
+                stream = await duckai.fetchStream("prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
+                    + "\n" + "接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt);
                 streamIdx = 0;
                 for await (const data of stream) {
                     const dataContent = data ?? "";
@@ -284,9 +280,8 @@ ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
                 break;
             case "claudeddg":
                 duckai = await initChat("claude-3-haiku")
-                finalprompt = "prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
-                    + "\n" + "接下来是你要回答的问题，请使用中文回复。你回复的所有内容都要有关于问题，而不要将prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt;
-                stream = await duckai.fetchStream(finalprompt);
+                stream = await duckai.fetchStream("prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
+                    + "\n" + "接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt);
                 streamIdx = 0;
                 for await (const data of stream) {
                     const dataContent = data ?? "";
