@@ -13,14 +13,16 @@
 
 支持 **右键回复** 和 **消息框内回复**
 
-支持 **自定义API接口**，**自定义系统提示词** 和 **自选模型编号**。只要是遵循OpenAI API规范的第三方模型都可以用此设定使用
+支持 **自定义API接口**，和 **自选模型编号**。只要是遵循OpenAI API格式的第三方API都可以用此设定使用，如 [DeepSeek](https://www.deepseek.com/)，[OpenRouter](https://openrouter.ai/) 等 （教程看下面）
+
+支持 **自定义系统提示词** 
 
 支持 [OpenAI 模型](https://platform.openai.com/docs/models/models) 和 [DuckDuckGo AI Chat 模型](https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1)
 
 ## 功能展示
 
 ### 设置界面
-<img src="./res/demo/settings.png" alt="设置界面" width="600"/>
+<img src="./res/demo/settings.jpg" alt="设置界面" width="600"/>
 
 ### 消息框模式
 <img src="./res/demo/chat_mode.gif" alt="消息框模式" width="600"/>
@@ -50,6 +52,11 @@
 -   在设置 `系统提示词` 中定义你想要 GPT 怎么回复
 -   右键消息选`GPT`回复，或在消息框内输入提示词然后点击 GPT 图标
 -   在设置界面中开启`右键菜单预设`，可以在右键菜单中选择预设提示词
+
+### 使用第三方API如 DeepSeek，OpenRouter 等
+- 去 DeepSeek 或 OpenRouter 注册账号，获取并设置 API 密钥
+- 在设置界面中模型选择`自定义`，然后输入模型编号，比如 `deepseek-chat`
+- 在设置界面中API接口选择`自定义`，然后输入API接口，比如 `https://api.deepseek.com`
 
 ## 鸣谢
 

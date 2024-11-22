@@ -157,15 +157,15 @@
     <setting-list data-direction="column">
       <setting-item data-direction="row">
         <div>
-          <setting-text>OpenAI API 密钥</setting-text>
+          <setting-text>API 密钥</setting-text>
           <setting-text
             data-type="secondary"
             style="-webkit-line-clamp: initial"
-            >填写你自己的 OpenAI API 密钥，或<a
+            >填写你自己的 API 密钥，或<a
               href="javascript:void(0);"
               onclick="gpt_reply.openWeb(`https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key`)"
               >储存成系统变量</a
-            >
+            >，支持 OpenAI，DeepSeek，OpenRouter等
           </setting-text>
 
           <div class="input-group">
@@ -185,7 +185,7 @@
           <setting-text
             data-type="secondary"
             style="-webkit-line-clamp: initial"
-            >支持跳转或使用非官方接口</setting-text
+            >支持跳转或使用非OpenAI接口，需要设置下面的自定义模型号</setting-text
           >
 
           <div class="input-group">
@@ -239,16 +239,6 @@
               <input type="radio" name="chat-model" value="o1-mini" />
               o1-mini
             </label>
-            <label>
-              <input type="radio" name="chat-model" value="custom" />
-              自定义
-              <input
-                id="custom-chat-model"
-                type="text"
-                spellcheck="false"
-                placeholder="输入模型号"
-              />
-            </label>
           </div>
           <setting-text>DuckDuckGo</setting-text>
           <setting-text
@@ -276,6 +266,25 @@
             <label>
               <input type="radio" name="chat-model" value="mixtral-ddg" />
               Mixtral 8x7B
+            </label>
+          </div>
+
+          <setting-text>自定义</setting-text>
+          <setting-text
+            data-type="secondary"
+            style="-webkit-line-clamp: initial"
+            >直接输入模型的名字，如 deepseek-chat，qwen/qwen-2.5-coder-32b-instruct (OpenRouter)
+          </setting-text>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="chat-model" value="custom" />
+              模型号
+              <input
+                id="custom-chat-model"
+                type="text"
+                spellcheck="false"
+                placeholder="输入模型号"
+              />
             </label>
           </div>
         </div>
@@ -416,7 +425,7 @@
           >
         </div>
         <setting-button data-type="secondary" id="settings-github-link"
-          >给个星星吧</setting-button
+          >来给个星吧</setting-button
         >
       </setting-item>
     </setting-list>
