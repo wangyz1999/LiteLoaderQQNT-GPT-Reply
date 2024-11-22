@@ -1,222 +1,242 @@
 <!-- 设置界面 -->
 <style>
-    .gpt_reply a {
-        color: var(--text-link);
-    }
+  .gpt_reply a {
+    color: var(--text-link);
+  }
 
+  .gpt_reply input {
+    align-self: normal;
+    flex: 1;
+    border-radius: 4px;
+    margin-right: 12px;
+    transition: all 100ms ease-out;
+  }
+
+  .gpt_reply input:focus {
+    padding-left: 4px;
+    background-color: var(--overlay_active);
+  }
+
+  .gpt_reply .input-group {
+    display: flex;
+    flex-direction: row;
+    margin-top: 8px;
+  }
+
+  .gpt_reply .ops-btns > *:not(:last-child) {
+    margin-right: 4px;
+  }
+
+  .gpt_reply setting-item > div {
+    width: 100%;
+  }
+
+  .gpt_reply setting-item > div.width-80 {
+    width: 80% !important;
+  }
+
+  /* Light mode */
+  @media (prefers-color-scheme: light) {
     .gpt_reply input {
-        align-self: normal;
-        flex: 1;
-        border-radius: 4px;
-        margin-right: 12px;
-        transition: all 100ms ease-out;
+      color: black;
     }
+    textarea {
+      color: black;
+    }
+  }
 
-    .gpt_reply input:focus {
-        padding-left: 4px;
-        background-color: var(--overlay_active);
+  /* Dark mode */
+  @media (prefers-color-scheme: dark) {
+    .gpt_reply input {
+      color: white;
     }
+    textarea {
+      color: white;
+    }
+  }
 
-    .gpt_reply .input-group {
-        display: flex;
-        flex-direction: row;
-        margin-top: 8px;
-    }
+  .radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+  }
 
-    .gpt_reply .ops-btns > *:not(:last-child) {
-        margin-right: 4px;
-    }
+  .radio-group label {
+    margin-right: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
 
-    .gpt_reply setting-item > div {
-        width: 100%;
-    }
+  .radio-group input[type="radio"] {
+    width: 14px;
+    height: 14px;
+    appearance: none;
+    border: 1px solid #c5c5c5;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    margin: 4px 5px 0 0;
+  }
 
-    .gpt_reply setting-item > div.width-80 {
-        width: 80% !important;
-    }
+  .radio-group input[type="radio"]:checked {
+    background-color: #008deb;
+    border: 1px solid #008deb;
+  }
 
-    /* Light mode */
-    @media (prefers-color-scheme: light) {
-        .gpt_reply input {
-            color: black;
-        }
-        textarea {
-            color: black;
-        }
-    }
+  .radio-group input[type="radio"]::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    background-color: white;
+  }
 
-    /* Dark mode */
-    @media (prefers-color-scheme: dark) {
-        .gpt_reply input {
-            color: white;
-        }
-        textarea {
-            color: white;
-        }
-    }
+  .radio-group input[type="radio"]:checked::before {
+    background-color: #008deb;
+  }
 
-    .radio-group {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
+  .radio-group input[type="text"] {
+    display: none;
+    margin-left: 10px;
+    padding: 2px 4px;
+  }
 
-    .radio-group label {
-        margin-right: 15px;
-        display: flex;
-        align-items: center;
-    }
+  .radio-group input[type="radio"]:checked + input[type="text"] {
+    display: inline-block;
+  }
 
-    .radio-group input[type="radio"] {
-        width: 14px;
-        height: 14px;
-        appearance: none;
-        border: 1px solid #c5c5c5;
-        border-radius: 2px;
-        outline: none;
-        cursor: pointer;
-        position: relative;
-        margin: 4px 5px 0 0;
-    }
-
-    .radio-group input[type="radio"]:checked {
-        background-color: #008deb;
-        border: 1px solid #008deb;
-    }
-
-    .radio-group input[type="radio"]::before {
-        content: "";
-        display: block;
-        width: 100%;
-        height: 100%;
-        border-radius: 2px;
-        background-color: white;
-    }
-
-    .radio-group input[type="radio"]:checked::before {
-        background-color: #008deb;
-    }
-
-    .radio-group input[type="text"] {
-        display: none;
-        margin-left: 10px;
-        padding: 2px 4px;
-    }
-
-    .radio-group input[type="radio"]:checked + input[type="text"] {
-        display: inline-block;
-    }
-
-    #system-message {
-        height: 100px;
-        width: 100%;
-    }
+  #system-message {
+    height: 100px;
+    width: 100%;
+  }
 </style>
 
 <setting-section data-title="配置">
-    <setting-panel>
-        <setting-list data-direction="column">
-            <setting-item data-direction="row">
-                <div>
-                    <setting-text>OpenAI API 密钥</setting-text>
-                    <setting-text
-                        data-type="secondary"
-                        style="-webkit-line-clamp: initial"
-                        >填写你自己的 OpenAI API
-                        密钥，或<a
-                            href="javascript:void(0);"
-                            onclick="gpt_reply.openWeb('https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key')"
-                            >储存成系统变量</a
-                        ></setting-text
-                    >
+  <setting-panel>
+    <setting-list data-direction="column">
+      <setting-item data-direction="row">
+        <div>
+          <setting-text>OpenAI API 密钥</setting-text>
+          <setting-text
+            data-type="secondary"
+            style="-webkit-line-clamp: initial"
+            >填写你自己的 OpenAI API 密钥，或<a
+              href="javascript:void(0);"
+              onclick="gpt_reply.openWeb(`https://platform.openai.com/docs/quickstart/step-2-set-up-your-api-key`)"
+              >储存成系统变量</a
+            >
+          </setting-text>
 
-                    <div class="input-group">
-                        <input
-                            id="openai-api-key"
-                            type="text"
-                            spellcheck="false"
-                            placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                        />
-                    </div>
-                </div>
-            </setting-item>
+          <div class="input-group">
+            <input
+              id="openai-api-key"
+              type="text"
+              spellcheck="false"
+              placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+            />
+          </div>
+        </div>
+      </setting-item>
 
-            <setting-item data-direction="row">
-                <div>
-                    <setting-text>自定义 API 接口</setting-text>
-                    <setting-text
-                        data-type="secondary"
-                        style="-webkit-line-clamp: initial"
-                        >支持跳转或使用非官方接口</setting-text>
+      <setting-item data-direction="row">
+        <div>
+          <setting-text>自定义 API 接口</setting-text>
+          <setting-text
+            data-type="secondary"
+            style="-webkit-line-clamp: initial"
+            >支持跳转或使用非官方接口</setting-text
+          >
 
-                    <div class="input-group">
-                        <input
-                            id="openai-base-url"
-                            type="text"
-                            spellcheck="false"
-                            placeholder="https://api.example.com/v2/"
-                        />
-                    </div>
-                </div>
-            </setting-item>
-        </setting-list>
-    </setting-panel>
+          <div class="input-group">
+            <input
+              id="openai-base-url"
+              type="text"
+              spellcheck="false"
+              placeholder="https://api.example.com/v2/"
+            />
+          </div>
+        </div>
+      </setting-item>
+    </setting-list>
+  </setting-panel>
 </setting-section>
 
 <setting-section data-title="模型设置">
-    <setting-panel>
-        <setting-list data-direction="column">
-            <setting-item data-direction="row">
-                <div>
-                    <setting-text>模型号</setting-text>
-                    <setting-text
-                        data-type="secondary"
-                        style="-webkit-line-clamp: initial"
-                        >填写选择模型或填入自定义模型号，如
-                        gpt-4o 查看<a
-                            href="javascript:void(0);"
-                            onclick="gpt_reply.openWeb('https://platform.openai.com/docs/models/models')"
-                            >模型列表</a
-                        ></setting-text
-                    >
+  <setting-panel>
+    <setting-list data-direction="column">
+      <setting-item data-direction="row">
+        <div>
+          <setting-text>模型号</setting-text>
+          <setting-text
+            data-type="secondary"
+            style="-webkit-line-clamp: initial"
+            >填写选择模型或填入自定义模型号，如 gpt-4o 查看<a
+              href="javascript:void(0);"
+              onclick="gpt_reply.openWeb(`https://platform.openai.com/docs/models/models`)"
+              >模型列表</a
+            >
+          </setting-text>
+          <div class="radio-group">
+            <label>
+              <input
+                type="radio"
+                name="chat-model"
+                value="gpt-4o-mini"
+                checked
+              />
+              GPT-4o mini
+            </label>
+            <label>
+              <input type="radio" name="chat-model" value="gpt-4o" />
+              GPT-4o
+            </label>
+            <label>
+              <input type="radio" name="chat-model" value="custom" />
+              自定义
+              <input
+                id="custom-chat-model"
+                type="text"
+                spellcheck="false"
+                placeholder="输入模型号"
+              />
+            </label>
+          </div>
+          <setting-text>DuckDuckGo</setting-text>
+          <setting-text
+            data-type="secondary"
+            style="-webkit-line-clamp: initial"
+            >使用 <a
+            href="javascript:void(0);"
+            onclick="gpt_reply.openWeb(`https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1`)"
+            >Duckduckgo AI Chat</a
+          >，是免费的
+          </setting-text>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="chat-model" value="4ominiddg" />
+              GPT-4o mini
+            </label>
+            <label>
+              <input type="radio" name="chat-model" value="claudeddg" />
+              Claude 3 Haiku
+            </label>
+            <label>
+              <input type="radio" name="chat-model" value="llamaddg" />
+              Llama 3.1 70B
+            </label>
+            <label>
+              <input type="radio" name="chat-model" value="mixtralddg" />
+              Mixtral 8x7B
+            </label>
+          </div>
+        </div>
+      </setting-item>
 
-                    <div class="radio-group">
-                        <label>
-                            <input
-                                type="radio"
-                                name="chat-model"
-                                value="gpt-4o-mini"
-                                checked
-                            />
-                            GPT-4o mini
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="chat-model"
-                                value="gpt-4o"
-                            />
-                            GPT-4o
-                        </label>
-                        <label>
-                            <input
-                                type="radio"
-                                name="chat-model"
-                                value="custom"
-                            />
-                            自定义
-                            <input
-                                id="custom-chat-model"
-                                type="text"
-                                spellcheck="false"
-                                placeholder="输入模型号"
-                            />
-                        </label>
-                    </div>
-                </div>
-            </setting-item>
-
-            <!-- <setting-item data-direction="row">
+      <!-- <setting-item data-direction="row">
                 <div>
                     <setting-text>开启模型记忆</setting-text>
                     <setting-text
@@ -242,26 +262,26 @@
                 </div>
             </setting-item> -->
 
-            <setting-item data-direction="row">
-                <div>
-                    <setting-text>系统提示词</setting-text>
-                    <setting-text
-                        data-type="secondary"
-                        style="-webkit-line-clamp: initial"
-                        >在此处定义模型回复的风格</setting-text
-                    >
+      <setting-item data-direction="row">
+        <div>
+          <setting-text>系统提示词</setting-text>
+          <setting-text
+            data-type="secondary"
+            style="-webkit-line-clamp: initial"
+            >在此处定义模型回复的风格</setting-text
+          >
 
-                    <div class="input-group">
-                        <textarea
-                            id="system-message"
-                            spellcheck="false"
-                            placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"
-                        ></textarea>
-                    </div>
-                </div>
-            </setting-item>
+          <div class="input-group">
+            <textarea
+              id="system-message"
+              spellcheck="false"
+              placeholder="你在回复群聊消息，请使用以下说话风格&#10;- 你说话言简意赅&#10;- 你喜欢用颜文字卖萌"
+            ></textarea>
+          </div>
+        </div>
+      </setting-item>
 
-            <!-- <setting-item data-direction="row">
+      <!-- <setting-item data-direction="row">
                 <div>
                     <setting-text>回复模式</setting-text>
                     <setting-text
@@ -306,24 +326,24 @@
                     </div>
                 </div>
             </setting-item> -->
-        </setting-list>
-    </setting-panel>
+    </setting-list>
+  </setting-panel>
 </setting-section>
 
 <setting-section data-title="关于">
-    <setting-panel>
-        <setting-list data-direction="column">
-            <setting-item data-direction="row">
-                <div class="width-80">
-                    <setting-text>GitHub 仓库</setting-text>
-                    <setting-text data-type="secondary"
-                        >https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply</setting-text
-                    >
-                </div>
-                <setting-button data-type="secondary" id="settings-github-link"
-                    >进去瞅瞅</setting-button
-                >
-            </setting-item>
-        </setting-list>
-    </setting-panel>
+  <setting-panel>
+    <setting-list data-direction="column">
+      <setting-item data-direction="row">
+        <div class="width-80">
+          <setting-text>GitHub 仓库</setting-text>
+          <setting-text data-type="secondary"
+            >https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply</setting-text
+          >
+        </div>
+        <setting-button data-type="secondary" id="settings-github-link"
+          >可以进来给个星星吗</setting-button
+        >
+      </setting-item>
+    </setting-list>
+  </setting-panel>
 </setting-section>

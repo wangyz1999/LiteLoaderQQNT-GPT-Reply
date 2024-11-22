@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "duckduckgo-ai-chat-cjs": "^1.0.2",
     "openai": "^4.45.0"
   }
 }
