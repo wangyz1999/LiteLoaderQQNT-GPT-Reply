@@ -113,6 +113,43 @@
     height: 100px;
     width: 100%;
   }
+
+  .preset-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+
+  .preset-selector {
+    flex: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border_secondary);
+    background-color: var(--bg_bottom_light);
+    color: var(--text_primary);
+  }
+
+  .preset-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  /* Light mode */
+  @media (prefers-color-scheme: light) {
+    .preset-selector {
+      color: black;
+    }
+  }
+
+  /* Dark mode */
+  @media (prefers-color-scheme: dark) {
+    .preset-selector {
+      color: white;
+    }
+  }
 </style>
 
 <setting-section data-title="配置">
@@ -278,6 +315,16 @@
             style="-webkit-line-clamp: initial"
             >在此处定义模型回复的风格</setting-text
           >
+
+          <div class="preset-controls">
+            <select id="preset-selector" class="preset-selector">
+              <option value="">选择预设...</option>
+            </select>
+            <div class="preset-buttons">
+              <button id="save-preset" class="q-button q-button--small q-button--secondary">保存为新预设</button>
+              <button id="delete-preset" class="q-button q-button--small q-button--secondary">删除预设</button>
+            </div>
+          </div>
 
           <div class="input-group">
             <textarea

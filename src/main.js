@@ -14,8 +14,22 @@ const defaultSettings = {
     openai_base_url: "",
     model: "gpt-4o-mini",
     reply_mode: "reply-mode-copy",
-    system_message:
-        "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
+    system_message: "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
+    system_message_presets: [
+        {
+            name: "简洁卖萌",
+            message: "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌"
+        },
+        {
+            name: "专业解答",
+            message: "你是一个专业的问题解答者，请使用以下说话风格\n- 回答严谨专业\n- 条理清晰\n- 用词准确"
+        },
+        {
+            name: "幽默风趣",
+            message: "你是一个幽默的聊天伙伴，请使用以下说话风格\n- 善于讲笑话\n- 回答诙谐有趣\n- 适当使用梗"
+        }
+    ],
+    selected_preset_index: 0
 };
 
 if (!fs.existsSync(pluginDataPath)) {
@@ -68,6 +82,11 @@ function updateSettingsWithDefaults(existingSettings, defaultSettings) {
         if (!existingSettings.hasOwnProperty(key)) {
             existingSettings[key] = defaultSettings[key];
             updated = true;
+        } else if (key === 'system_message_presets' && Array.isArray(defaultSettings[key])) {
+            if (!Array.isArray(existingSettings[key]) || existingSettings[key].length === 0) {
+                existingSettings[key] = defaultSettings[key];
+                updated = true;
+            }
         }
     }
     return updated;
@@ -286,7 +305,7 @@ questions: ${prompt}`;
 
 
 /**
- * 创建窗口时的触发事件
+ * 建窗口时的触发事件
  * @param {Electron.BrowserWindow} window - Electron的BrowserWindow实例
  */
 module.exports.onBrowserWindowCreated = (window) => {

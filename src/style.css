@@ -88,3 +88,40 @@
 body[q-theme="dark"] #gpt-context-menu-icon {
     filter: invert(1);
 }
+
+.preset-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    gap: 8px;
+}
+
+.preset-selector {
+    flex: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border_secondary);
+    background-color: var(--bg_bottom_light);
+    color: var(--text_primary);
+}
+
+.preset-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+    .preset-selector {
+        color: black;
+    }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .preset-selector {
+        color: white;
+    }
+}
