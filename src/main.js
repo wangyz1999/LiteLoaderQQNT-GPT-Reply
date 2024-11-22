@@ -256,8 +256,12 @@ questions: ${prompt}`;
             }
         }
     } catch (error) {
-        log(error);
-        event.sender.send("LiteLoader.gpt_reply.streamError", error.message, request_id);
+        log("[回复错误]", error);
+        event.sender.send(
+            "LiteLoader.gpt_reply.streamError", 
+            error.message || "未知错误",
+            params.request_id
+        );
     }
 });
 
