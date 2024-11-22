@@ -178,9 +178,8 @@
               href="javascript:void(0);"
               onclick="gpt_reply.openWeb(`https://platform.openai.com/docs/models/models`)"
               >模型列表</a
-            ><br />duckduckgo暂不支持prompt
+            >
           </setting-text>
-
           <div class="radio-group">
             <label>
               <input
@@ -196,22 +195,6 @@
               GPT-4o
             </label>
             <label>
-              <input type="radio" name="chat-model" value="4ominiddg" />
-              4o-mini-ddg
-            </label>
-            <label>
-              <input type="radio" name="chat-model" value="llamaddg" />
-              llama3.1-ddg
-            </label>
-            <label>
-              <input type="radio" name="chat-model" value="mixtralddg" />
-              mixtral-ddg
-            </label>
-            <label>
-              <input type="radio" name="chat-model" value="claudeddg" />
-              claude-haiku-ddg
-            </label>
-            <label>
               <input type="radio" name="chat-model" value="custom" />
               自定义
               <input
@@ -220,6 +203,34 @@
                 spellcheck="false"
                 placeholder="输入模型号"
               />
+            </label>
+          </div>
+          <setting-text>DuckDuckGo</setting-text>
+          <setting-text
+            data-type="secondary"
+            style="-webkit-line-clamp: initial"
+            >使用 <a
+            href="javascript:void(0);"
+            onclick="gpt_reply.openWeb(`https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1`)"
+            >Duckduckgo AI Chat</a
+          >，是免费的
+          </setting-text>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="chat-model" value="4ominiddg" />
+              GPT-4o mini
+            </label>
+            <label>
+              <input type="radio" name="chat-model" value="claudeddg" />
+              Claude 3 Haiku
+            </label>
+            <label>
+              <input type="radio" name="chat-model" value="llamaddg" />
+              Llama 3.1 70B
+            </label>
+            <label>
+              <input type="radio" name="chat-model" value="mixtralddg" />
+              Mixtral 8x7B
             </label>
           </div>
         </div>
@@ -330,7 +341,7 @@
           >
         </div>
         <setting-button data-type="secondary" id="settings-github-link"
-          >进去瞅瞅</setting-button
+          >可以进来给个星星吗</setting-button
         >
       </setting-item>
     </setting-list>
