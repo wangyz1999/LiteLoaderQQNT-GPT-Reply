@@ -4,18 +4,35 @@
 
 [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT) 插件，直接在 QQNT 使用 ChatGPT 回复消息
 
+## 2.0 更新
+
+- 添加 DuckDuckGo 免费模型
+- 添加 `系统提示词` 预设
+
+## 功能描述
+
 支持 **右键回复** 和 **消息框内回复**
 
-支持 **自定义API接口**，**自定义系统提示词** 和 **自选模型编号**
+支持 **自定义API接口**，**自定义系统提示词** 和 **自选模型编号**。只要是遵循OpenAI API规范的第三方模型都可以用此设定使用
 
-注：OpenAI GPT 模型并非免费，使用会根据官方价格在官方 API 界面扣费
+支持 [OpenAI 模型](https://platform.openai.com/docs/models/models) 和 [DuckDuckGo AI Chat 模型](https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1)
 
 ## 功能展示
 
-<img src="./res/demo/settings.jpg" alt="设置界面" width="600"/>
+### 设置界面
+<img src="./res/demo/settings.png" alt="设置界面" width="600"/>
+
+### 消息框模式
 <img src="./res/demo/chat_mode.gif" alt="消息框模式" width="600"/>
+
+### 右键模式
 <img src="./res/demo/right_click_mode.gif" alt="右键模式" width="600"/>
 
+### 自定义多种预设提示词
+<img src="./res/demo/presets.gif" alt="右键模式" width="600"/>
+
+### 在设置界面中开启`右键菜单预设`可以在右键菜单中选择预设提示词
+<img src="./res/demo/right-click-presets.gif" alt="右键模式" width="600"/>
 
 ## 安装
 
@@ -32,6 +49,7 @@
     2. 复制 API 密钥到插件设置中，然后重启
 -   在设置 `系统提示词` 中定义你想要 GPT 怎么回复
 -   右键消息选`GPT`回复，或在消息框内输入提示词然后点击 GPT 图标
+-   在设置界面中开启`右键菜单预设`，可以在右键菜单中选择预设提示词
 
 ## 鸣谢
 
