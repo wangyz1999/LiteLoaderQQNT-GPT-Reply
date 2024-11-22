@@ -398,6 +398,8 @@ export const onSettingWindowCreated = async (view) => {
                 (radio.value === "custom" &&
                     settings.model !== "gpt-4o-mini" &&
                     settings.model !== "gpt-4o" && 
+                    settings.model !== "o1-preview" &&
+                    settings.model !== "o1-mini" &&
                     settings.model !== "gpt-4o-mini-ddg" &&
                     settings.model !== "llama-ddg" &&
                     settings.model !== "mixtral-ddg" &&

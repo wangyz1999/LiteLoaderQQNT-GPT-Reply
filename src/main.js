@@ -183,11 +183,23 @@ ipcMain.handle("LiteLoader.gpt_reply.getGPTReply", async (event, params) => {
             response = await duckai.fetchFull(system_message);
         } else {
             // Handle OpenAI models
-            const completion = await openai.chat.completions.create({
-                messages: [
+            let messages;
+            if (model === 'o1-preview' || model === 'o1-mini') {
+                // For o1 models that don't support system role
+                messages = [{
+                    role: "user",
+                    content: `${system_message}\n\nUser: ${prompt}`
+                }];
+            } else {
+                // For other OpenAI models that support system role
+                messages = [
                     { role: "system", content: system_message },
-                    { role: "user", content: prompt },
-                ],
+                    { role: "user", content: prompt }
+                ];
+            }
+
+            const completion = await openai.chat.completions.create({
+                messages: messages,
                 model: model,
             });
             response = completion.choices[0].message.content;
@@ -233,11 +245,18 @@ questions: ${prompt}`;
         if (model.endsWith('-ddg')) {
             await handleDuckAIStream(model.replace('-ddg', ''));
         } else {
-            const completion = await openai.chat.completions.create({
-                messages: [
+            const messages = (model === 'o1-preview' || model === 'o1-mini') 
+                ? [{
+                    role: "user",
+                    content: `${system_message}\n\nUser: ${prompt}`
+                }]
+                : [
                     { role: "system", content: system_message },
-                    { role: "user", content: prompt },
-                ],
+                    { role: "user", content: prompt }
+                ];
+
+            const completion = await openai.chat.completions.create({
+                messages: messages,
                 model: model,
                 stream: true,
             });
