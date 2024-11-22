@@ -80,6 +80,7 @@ async function streamGPTResponse(prompt, streamElementId) {
         system_message: settings.system_message,
         prompt: prompt,
         model: settings.model,
+        request_id: Date.now().toString()
     };
     window.gpt_reply.streamGPTReply(params, streamElementId);
 }

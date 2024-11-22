@@ -206,7 +206,7 @@ ipcMain.handle("LiteLoader.gpt_reply.getGPTReply", async (event, params) => {
  */
 ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
     try {
-        const { system_message, prompt, model } = params;
+        const { system_message, prompt, model, request_id } = params;
         let stream;
         let streamIdx = 0;
 
@@ -223,18 +223,16 @@ questions: ${prompt}`;
                     event.sender.send(
                         "LiteLoader.gpt_reply.streamData",
                         dataContent,
-                        streamIdx++
+                        streamIdx++,
+                        request_id
                     );
                 }
             }
         };
 
         if (model.endsWith('-ddg')) {
-            // Handle DuckDuckGo models
-            const modelName = model.replace('-ddg', '');
-            await handleDuckAIStream(modelName);
+            await handleDuckAIStream(model.replace('-ddg', ''));
         } else {
-            // Handle OpenAI models
             const completion = await openai.chat.completions.create({
                 messages: [
                     { role: "system", content: system_message },
@@ -251,14 +249,15 @@ questions: ${prompt}`;
                     event.sender.send(
                         "LiteLoader.gpt_reply.streamData",
                         chunkContent,
-                        chunkIdx++
+                        chunkIdx++,
+                        request_id
                     );
                 }
             }
         }
     } catch (error) {
         log(error);
-        event.sender.send("LiteLoader.gpt_reply.streamError", error.message);
+        event.sender.send("LiteLoader.gpt_reply.streamError", error.message, request_id);
     }
 });
 

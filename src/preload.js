@@ -53,15 +53,15 @@ contextBridge.exposeInMainWorld("gpt_reply", {
         ipcRenderer.removeAllListeners("LiteLoader.gpt_reply.streamData");
         ipcRenderer.removeAllListeners("LiteLoader.gpt_reply.streamError");
 
-        /**
-         * 处理流数据
-         * @param {Event} event - 事件对象
-         * @param {string} chunkContent - 流数据内容
-         * @param {number} chunkIdx - 数据块索引
-         */
+        // Track the current request ID
+        const currentRequestId = params.request_id;
+
         ipcRenderer.on(
             "LiteLoader.gpt_reply.streamData",
-            (event, chunkContent, chunkIdx) => {
+            (event, chunkContent, chunkIdx, responseRequestId) => {
+                // Ignore responses from old requests
+                if (responseRequestId !== currentRequestId) return;
+
                 const streamElement = document.getElementById(streamElementId);
                 if (streamElement) {
                     if (chunkIdx === 0) {
@@ -72,14 +72,12 @@ contextBridge.exposeInMainWorld("gpt_reply", {
             }
         );
 
-        /**
-         * 处理流错误
-         * @param {Event} event - 事件对象
-         * @param {string} errorMessage - 错误信息
-         */
         ipcRenderer.on(
             "LiteLoader.gpt_reply.streamError",
-            (event, errorMessage) => {
+            (event, errorMessage, responseRequestId) => {
+                // Ignore errors from old requests
+                if (responseRequestId !== currentRequestId) return;
+
                 const streamElement = document.getElementById(streamElementId);
                 if (streamElement) {
                     streamElement.innerText += `\nError: ${errorMessage}`;
