@@ -397,10 +397,10 @@ export const onSettingWindowCreated = async (view) => {
                 (radio.value === "custom" &&
                     settings.model !== "gpt-4o-mini" &&
                     settings.model !== "gpt-4o" && 
-                    settings.model !== "4ominiddg" &&
-                    settings.model !== "llamaddg" &&
-                    settings.model !== "mixtralddg" &&
-                    settings.model !== "claudeddg")
+                    settings.model !== "gpt-4o-mini-ddg" &&
+                    settings.model !== "llama-ddg" &&
+                    settings.model !== "mixtral-ddg" &&
+                    settings.model !== "claude-3-haiku-ddg")
             ) {
                 radio.checked = true;
             } else {

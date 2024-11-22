@@ -176,38 +176,21 @@ ipcMain.handle("LiteLoader.gpt_reply.getGPTReply", async (event, params) => {
         const { system_message, prompt, model } = params;
         let response;
 
-        switch (model) {
-            case "4ominiddg":
-                // 处理 duckduckgo 模型的情况
-                duckai = await initChat("gpt-4o-mini")
-                response = await duckai.fetchFull(system_message);
-                break;
-            case "llamaddg":
-                // 处理 duckduckgo 模型的情况
-                duckai = await initChat("llama")
-                response = await duckai.fetchFull(system_message);
-                break;
-            case "mixtralddg":
-                // 处理 duckduckgo 模型的情况
-                duckai = await initChat("mixtral")
-                response = await duckai.fetchFull(system_message);
-                break;
-            case "claudeddg":
-                // 处理 duckduckgo 模型的情况
-                duckai = await initChat("claude-3-haiku")
-                response = await duckai.fetchFull(system_message);
-                break;
-            default:
-                // 处理默认情况
-                const completion = await openai.chat.completions.create({
-                    messages: [
-                        { role: "system", content: system_message },
-                        { role: "user", content: prompt },
-                    ],
-                    model: model,
-                });
-                response = completion.choices[0].message.content;
-                break;
+        if (model.endsWith('-ddg')) {
+            // Handle DuckDuckGo models
+            const modelName = model.replace('-ddg', '');
+            duckai = await initChat(modelName);
+            response = await duckai.fetchFull(system_message);
+        } else {
+            // Handle OpenAI models
+            const completion = await openai.chat.completions.create({
+                messages: [
+                    { role: "system", content: system_message },
+                    { role: "user", content: prompt },
+                ],
+                model: model,
+            });
+            response = completion.choices[0].message.content;
         }
 
         return response;
@@ -226,98 +209,52 @@ ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
         const { system_message, prompt, model } = params;
         let stream;
         let streamIdx = 0;
-        switch (model) {
-            case "4ominiddg":
-                duckai = await initChat("gpt-4o-mini")
-                stream = await duckai.fetchStream("prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
-                    + "\n" + "接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt);
-                streamIdx = 0;
-                for await (const data of stream) {
-                    const dataContent = data ?? "";
-                    if (dataContent) {
-                        event.sender.send(
-                            "LiteLoader.gpt_reply.streamData",
-                            dataContent,
-                            streamIdx
-                        );
-                        streamIdx++;
-                    }
-                }
-                break;
-            case "llamaddg":
-                duckai = await initChat("llama")
-                stream = await duckai.fetchStream("prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
-                    + "\n" + "接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt);
-                streamIdx = 0;
-                for await (const data of stream) {
-                    const dataContent = data ?? "";
-                    if (dataContent) {
-                        event.sender.send(
-                            "LiteLoader.gpt_reply.streamData",
-                            dataContent,
-                            streamIdx
-                        );
-                        streamIdx++;
-                    }
-                }
-                break;
-            case "mixtralddg":
-                duckai = await initChat("mixtral")
-                stream = await duckai.fetchStream("prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
-                    + "\n" + "接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt);
-                streamIdx = 0;
-                for await (const data of stream) {
-                    const dataContent = data ?? "";
-                    if (dataContent) {
-                        event.sender.send(
-                            "LiteLoader.gpt_reply.streamData",
-                            dataContent,
-                            streamIdx
-                        );
-                        streamIdx++;
-                    }
-                }
-                break;
-            case "claudeddg":
-                duckai = await initChat("claude-3-haiku")
-                stream = await duckai.fetchStream("prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，" + system_message
-                    + "\n" + "接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答" + "\n" + "questions: " + prompt);
-                streamIdx = 0;
-                for await (const data of stream) {
-                    const dataContent = data ?? "";
-                    if (dataContent) {
-                        event.sender.send(
-                            "LiteLoader.gpt_reply.streamData",
-                            dataContent,
-                            streamIdx
-                        );
-                        streamIdx++;
-                    }
-                }
-                break;
-            default:
-                const completion = await openai.chat.completions.create({
-                    messages: [
-                        { role: "system", content: system_message },
-                        { role: "user", content: prompt },
-                    ],
-                    model: model,
-                    stream: true,
-                });
 
-                let chunkIdx = 0;
-                for await (const chunk of completion) {
-                    const chunkContent = chunk?.choices?.[0]?.delta?.content ?? "";
-                    if (chunkContent) {
-                        event.sender.send(
-                            "LiteLoader.gpt_reply.streamData",
-                            chunkContent,
-                            chunkIdx
-                        );
-                        chunkIdx++;
-                    }
+        const handleDuckAIStream = async (modelName) => {
+            duckai = await initChat(modelName);
+            const promptText = `prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，${system_message}
+接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答
+questions: ${prompt}`;
+            
+            stream = await duckai.fetchStream(promptText);
+            for await (const data of stream) {
+                const dataContent = data ?? "";
+                if (dataContent) {
+                    event.sender.send(
+                        "LiteLoader.gpt_reply.streamData",
+                        dataContent,
+                        streamIdx++
+                    );
                 }
-                break;
+            }
+        };
+
+        if (model.endsWith('-ddg')) {
+            // Handle DuckDuckGo models
+            const modelName = model.replace('-ddg', '');
+            await handleDuckAIStream(modelName);
+        } else {
+            // Handle OpenAI models
+            const completion = await openai.chat.completions.create({
+                messages: [
+                    { role: "system", content: system_message },
+                    { role: "user", content: prompt },
+                ],
+                model: model,
+                stream: true,
+            });
+
+            let chunkIdx = 0;
+            for await (const chunk of completion) {
+                const chunkContent = chunk?.choices?.[0]?.delta?.content ?? "";
+                if (chunkContent) {
+                    event.sender.send(
+                        "LiteLoader.gpt_reply.streamData",
+                        chunkContent,
+                        chunkIdx++
+                    );
+                }
+            }
         }
     } catch (error) {
         log(error);
