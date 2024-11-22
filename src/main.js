@@ -15,6 +15,7 @@ const defaultSettings = {
     model: "gpt-4o-mini",
     reply_mode: "reply-mode-copy",
     system_message: "你在回复群聊消息，请使用以下说话风格\n- 你说话言简意赅\n- 你喜欢用颜文字卖萌",
+    preset_in_context: "off",
     system_message_presets: [
         {
             "name": "翻译官",
@@ -252,7 +253,7 @@ ipcMain.handle("LiteLoader.gpt_reply.streamGPTReply", async (event, params) => {
         const handleDuckAIStream = async (modelName) => {
             duckai = await initChat(modelName);
             const promptText = `prompt: 你是一个聊天机器人，这是当前使用你的人设置的系统提示词，${system_message}
-接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存在的内容进行回答
+接下来是你要回答的问题。你回复的所有内容都要有关于问题，而不要对prompt部分中存���的内容进行回答
 questions: ${prompt}`;
             
             stream = await duckai.fetchStream(promptText);

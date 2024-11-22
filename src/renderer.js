@@ -74,13 +74,13 @@ async function getGPTResponse(prompt, callback) {
  * @param {string} prompt - 用户输入的提示
  * @param {string} streamElementId - 显示流式数据的HTML元素ID
  */
-async function streamGPTResponse(prompt, streamElementId) {
+async function streamGPTResponse(prompt, streamElementId, customSystemMessage = null) {
   const settings = await gpt_reply.getSettings();
   const params = {
-    system_message: settings.system_message,
-    prompt: prompt,
-    model: settings.model,
-    request_id: Date.now().toString(),
+      system_message: customSystemMessage || settings.system_message,
+      prompt: prompt,
+      model: settings.model,
+      request_id: Date.now().toString(),
   };
   window.gpt_reply.streamGPTReply(params, streamElementId);
 }
@@ -141,51 +141,68 @@ function getMessageElement(target) {
 /**
  * 处理右键GPT回复菜单
  */
-function handleContextMenu() {
+async function handleContextMenu() {
   document
-    .querySelector("#ml-root .ml-list")
-    .addEventListener("mousedown", (e) => {
-      if (e.button !== 2) {
-        appended = true;
-        return;
-      }
-      messageEl = getMessageElement(e.target);
-      appended = false;
-    });
-
-  new MutationObserver(() => {
-    if (appended) return;
-    const qContextMenu = document.querySelector(".q-context-menu");
-    if (qContextMenu && messageEl) {
-      const messageText = messageEl.querySelector(".message-content").innerText;
-      if (!messageText) return;
-
-      let firstMenuItem = document.querySelector(
-        ".q-context-menu .q-context-menu-item"
-      );
-      let clonedMenuItem = firstMenuItem.cloneNode(true);
-      clonedMenuItem.querySelector("span").innerText = "GPT";
-      fetchIcon(
-        ICON_PATH,
-        clonedMenuItem.querySelector(".q-icon"),
-        "gpt-context-menu-icon"
-      );
-
-      clonedMenuItem.addEventListener("click", () => {
-        qContextMenu.style.display = "none";
-        document.getElementById("response-text").innerText = "GPT思考中...";
-        showGPTResponse(messageText);
+      .querySelector("#ml-root .ml-list")
+      .addEventListener("mousedown", async (e) => {
+          if (e.button !== 2) {
+              appended = true;
+              return;
+          }
+          messageEl = getMessageElement(e.target);
+          appended = false;
       });
 
-      let separator = document.querySelector(
-        ".q-context-menu .q-context-menu-separator"
-      );
-      qContextMenu.insertBefore(clonedMenuItem, separator);
-      appended = true;
-    }
-  }).observe(document.body, { childList: true });
-}
+      new MutationObserver(async () => {
+        if (appended) return;
+        const qContextMenu = document.querySelector(".q-context-menu");
+        if (qContextMenu && messageEl) {
+            const messageText = messageEl.querySelector(".message-content").innerText;
+            if (!messageText) return;
 
+            const settings = await gpt_reply.getSettings();
+            const firstMenuItem = document.querySelector(".q-context-menu .q-context-menu-item");
+            const separator = document.querySelector(".q-context-menu .q-context-menu-separator");
+
+            if (settings.preset_in_context === "on" && settings.system_message_presets?.length > 0) {
+              // Add menu items for each preset
+              settings.system_message_presets.forEach((preset) => {
+                  const menuItem = firstMenuItem.cloneNode(true);
+                  menuItem.querySelector("span").innerText = `GPT (${preset.name})`;
+                  fetchIcon(ICON_PATH, menuItem.querySelector(".q-icon"), "gpt-context-menu-icon");
+          
+                  // Create a closure with the preset message
+                  const presetMessage = preset.message;
+                  
+                  menuItem.addEventListener("click", () => {
+                      qContextMenu.style.display = "none";
+                      const responseText = document.getElementById("response-text");
+                      responseText.innerText = "GPT思考中...";
+                      
+                      // Show GPT response with the specific preset message
+                      showGPTResponse(messageText, presetMessage);
+                  });
+          
+                  qContextMenu.insertBefore(menuItem, separator);
+              });
+          } else {
+                // Original single GPT menu item
+                const menuItem = firstMenuItem.cloneNode(true);
+                menuItem.querySelector("span").innerText = "GPT";
+                fetchIcon(ICON_PATH, menuItem.querySelector(".q-icon"), "gpt-context-menu-icon");
+                const presetMessage = settings.system_message_presets[settings.selected_preset_index].message;
+                menuItem.addEventListener("click", () => {
+                    qContextMenu.style.display = "none";
+                    document.getElementById("response-text").innerText = "GPT思考中...";
+                    showGPTResponse(messageText, presetMessage);  
+                });
+
+                qContextMenu.insertBefore(menuItem, separator);
+            }
+            appended = true;
+        }
+    }).observe(document.body, { childList: true });
+}
 /**
  * 聊天框GPT回复
  */
@@ -274,43 +291,37 @@ async function initializeResponseArea() {
  * 显示GPT回复
  * @param {string} text - 用户输入的文本
  */
-async function showGPTResponse(text) {
+async function showGPTResponse(text, customSystemMessage = null) {
   const settings = await gpt_reply.getSettings();
   const actionButton = document.querySelector("#gpt-reply-action-button");
-  // if (settings.reply_mode === "reply-mode-copy") {
-  //     actionButton.innerText = "复制";
-  // } else if (settings.reply_mode === "reply-mode-send") {
-  //     actionButton.innerText = "发送";
-  // } else if (settings.reply_mode === "reply-mode-replace") {
-  //     actionButton.innerText = "替换";
-  // }
   actionButton.innerText = "复制";
 
-  gptThinking = true;
   const gptResponse = document.getElementById("gpt-response");
   gptResponse.style.display = "block";
   gptResponse.animate(
-    [
-      { opacity: 0, transform: "translateY(20px)" },
-      { opacity: 1, transform: "translateY(0px)" },
-    ],
-    {
-      duration: 128,
-      easing: "ease-out",
-    }
+      [
+          { opacity: 0, transform: "translateY(20px)" },
+          { opacity: 1, transform: "translateY(0px)" },
+      ],
+      {
+          duration: 128,
+          easing: "ease-out",
+      }
   );
 
   if (!text) {
-    document.getElementById("response-text").innerText = "请在聊天框中输入内容";
-    return;
+      document.getElementById("response-text").innerText = "请在聊天框中输入内容";
+      return;
   }
+
   const openaiIsAvaliable = await gpt_reply.checkOpenAI();
   if (!openaiIsAvaliable) {
-    document.getElementById("response-text").innerText =
-      "未设置 OpenAI API Key";
-    return;
+      document.getElementById("response-text").innerText = "未设置 OpenAI API Key";
+      return;
   }
-  streamGPTResponse(text, "response-text");
+
+  // Use the custom system message if provided
+  streamGPTResponse(text, "response-text", customSystemMessage);
 }
 
 /**
@@ -592,6 +603,19 @@ export const onSettingWindowCreated = async (view) => {
       gpt_reply.openWeb(
         "https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply"
       );
+    });
+
+    const presetInContextRadios = view.querySelectorAll('input[name="preset-in-context"]');
+    presetInContextRadios.forEach((radio) => {
+        if (radio.value === settings.preset_in_context) {
+            radio.checked = true;
+        }
+        radio.addEventListener("change", async () => {
+            if (radio.checked) {
+                settings.preset_in_context = radio.value;
+                await gpt_reply.setSettings(settings);
+            }
+        });
     });
   } catch (error) {
     console.error("[设置页面错误]", error);
