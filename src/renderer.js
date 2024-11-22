@@ -390,15 +390,18 @@ export const onSettingWindowCreated = async (view) => {
     function updatePresetSelector() {
       presetSelector.innerHTML = '<option value="">选择预设...</option>';
       settings.system_message_presets.forEach((preset, index) => {
-        const option = document.createElement('option');
-        option.value = index.toString();
-        option.textContent = preset.name;
-        presetSelector.appendChild(option);
+          const option = document.createElement('option');
+          option.value = index.toString();
+          option.textContent = preset.name;
+          presetSelector.appendChild(option);
       });
       
-      // Set the previously selected preset
       if (settings.selected_preset_index !== undefined && settings.selected_preset_index !== null) {
-        presetSelector.value = settings.selected_preset_index.toString();
+          presetSelector.value = settings.selected_preset_index.toString();
+          const selectedPreset = settings.system_message_presets[settings.selected_preset_index];
+          if (selectedPreset) {
+              system_message.value = selectedPreset.message;
+          }
       }
     }
     updatePresetSelector();
