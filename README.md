@@ -4,16 +4,14 @@
 
 [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT) 插件，直接在 QQNT 使用 ChatGPT 回复消息
 
-## 2.0 更新
-
-- 添加 DuckDuckGo 免费模型
-- 添加 `系统提示词` 预设
+> [!NOTE]  
+> 2.0 更新添加了 DuckDuckGo 免费模型， 并且添加了 `系统提示词` 预设  
 
 ## 功能描述
 
 支持 **右键回复** 和 **消息框内回复**
 
-支持 **自定义API接口**，和 **自选模型编号**。只要是遵循OpenAI API格式的第三方API都可以用此设定使用，如 [DeepSeek](https://www.deepseek.com/)，[OpenRouter](https://openrouter.ai/) 等 （教程看下面）
+支持 **自定义API接口**，和 **自选模型编号**。只要是遵循OpenAI API格式的第三方API都可以用此设定使用，如 [DeepSeek](https://www.deepseek.com/)，[OpenRouter](https://openrouter.ai/)，[V3 API](https://api.v3.cm/) 等 （教程看下面）
 
 支持 **自定义系统提示词** 
 
@@ -38,8 +36,7 @@
 
 ## 安装
 
-请确保你已经安装了 LiteLoaderQQNT 并且能正常运作。
-
+请确保你已经安装了 LiteLoaderQQNT 并且能正常运作 -> [LightLoaderQQNT安装教程](https://liteloaderqqnt.github.io/guide/install.html)
 -   前往本仓库 [Release](https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply/releases) 下载最新版的插件压缩包
 -   将从本仓库 Release 中下载的压缩包解压至 LiteLoaderQQNT 的插件目录中
 -   启动或重启 QQNT
@@ -57,6 +54,7 @@
 - 去 DeepSeek 或 OpenRouter 注册账号，获取并设置 API 密钥
 - 在设置界面中模型选择`自定义`，然后输入模型编号，比如 `deepseek-chat`
 - 在设置界面中API接口选择`自定义`，然后输入API接口，比如 `https://api.deepseek.com`
+- **注意：** 有的API接口会带版本号，请查阅开发手册 [#10](https://github.com/wangyz1999/LiteLoaderQQNT-GPT-Reply/issues/10)
 
 ## 鸣谢
 
